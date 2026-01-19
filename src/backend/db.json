@@ -1,0 +1,11 @@
+{
+  "receipts": [
+    {
+      "id": "1",
+      "date": "2026-01-19",
+      "total": 3.74,
+      "healthScore": 85,
+      "items": [{ "name": "Bananas", "price": 0.54, "category": "Healthy" }]
+    }
+  ]
+}
