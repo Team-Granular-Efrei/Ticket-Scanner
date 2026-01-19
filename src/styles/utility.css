@@ -1,0 +1,89 @@
+@utility bg-* {
+  --color-bg: --alpha(--value("current")color / --modifier(integer)%);
+  --color-bg: --alpha(--value(--color-*, [*]) / --modifier(integer)%);
+}
+
+@utility bg-* {
+  --color-bg: --value("current")color;
+  --color-bg: --value(--color-*, [*]);
+}
+
+@utility z-* {
+  z-index: --value(--z-*);
+}
+
+@utility transition-all {
+  transition-timing-function: var(--tw-ease, var(--ease-bounce-in-out, ease));
+  transition-duration: var(--duration, var(--duration, 0s));
+}
+
+@utility duration-* {
+  --duration: --value(number)ms;
+  --duration: --value(--duration-*, [*]);
+}
+
+@utility delay-* {
+  --delay: --value(integer)ms;
+  --delay: --value(--delay-*, [*]);
+}
+
+@utility repeat-* {
+  animation-iteration-count: --value("infinite", "normal", integer);
+}
+
+@utility color-contrast-* {
+  --color-contrast: oklch(
+    from --value(--color-*, [*])
+    calc(
+      min(1, max(0,
+        /* Light bg: target ~25-30% lightness */
+        (min(1, max(0, (l - 0.68) * 30)) *
+        (l * 0.43)) + /* How dark for light backgrounds : 0.43 */
+        /* Dark bg: target ~75-80% lightness */
+        ((1 - min(1, max(0, (l - 0.68) * 30))) *
+        min(1, l * 6.88)) /* How light for dark backgrounds : 2.12 */
+      ))
+    )
+    /* Lower chroma for readability */
+    calc(c * 0.5) /* How colorful (0 = gray, 1 = full) */
+    h
+  );
+}
+
+@utility text-contrast-* {
+  @apply color-contrast-[--value(--color-*,[*])];
+  color: var(--color-contrast);
+}
+
+@utility text-contrast {
+   @apply color-contrast-[var(--color-bg)];
+  color: var(--color-contrast);
+}
+
+@utility text-bg {
+  color: var(--color-bg);
+}
+
+@utility w-* {
+  width: --value(--size-*);
+}
+
+@utility min-w-* {
+  min-width: --value(--size-*);
+}
+
+@utility max-w-* {
+  max-width: --value(--size-*);
+}
+
+@utility h-* {
+  height: --value(--size-*);
+}
+
+@utility min-h-* {
+  min-height: --value(--size-*);
+}
+
+@utility max-h-* {
+  max-height: --value(--size-*);
+}

@@ -1,0 +1,64 @@
+@utility carousel {
+  @layer components.l1.l2.l3 {
+    --carousel-scroll-snap-type: x mandatory;
+
+    @apply inline-flex overflow-x-scroll;
+    scroll-snap-type: var(--carousel-scroll-snap-type);
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
+
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+  }
+}
+
+@utility carousel-vertical {
+  @layer components.l1.l2 {
+    --carousel-scroll-snap-type: y mandatory;
+    @apply flex-col overflow-y-scroll;
+  }
+}
+
+@utility carousel-horizontal {
+  @layer components.l1.l2 {
+    --carousel-scroll-snap-type: x mandatory;
+    @apply flex-row overflow-x-scroll;
+  }
+}
+
+@utility carousel-item {
+  @layer components.l1.l2.l3 {
+    --carousel-scroll-snap-align: start;
+    @apply box-content flex flex-none;
+    scroll-snap-align: var(--carousel-scroll-snap-align);
+  }
+}
+
+@utility carousel-start {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: start;
+    }
+  }
+}
+
+@utility carousel-center {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: center;
+    }
+  }
+}
+
+@utility carousel-end {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: end;
+    }
+  }
+}

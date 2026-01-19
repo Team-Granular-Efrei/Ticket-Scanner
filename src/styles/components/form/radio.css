@@ -1,0 +1,94 @@
+@utility radio-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility radio {
+  @apply relative inline-block shrink-0 cursor-pointer appearance-none rounded-full p-1 align-middle size-(--size) text-base-content;
+  border: var(--border) solid var(--input-color, color-mix(in srgb, var(--color-base-content) 20%, #0000));
+  box-shadow: 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset;
+  --size: calc(var(--size-selector, 0.25rem) * 6);
+
+  &:before {
+    @apply block size-full rounded-full content-[""] scale-0;
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--fx-noise);
+    transition:
+      scale var(--duration, 400ms) var(--tw-ease, cubic-bezier(0.85, 2.06, 0.64, 1)),
+      background-color var(--duration, 400ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+      box-shadow var(--duration, 400ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 0px;
+  }
+
+  &:checked,
+  &[aria-checked="true"] {
+    @apply border-current;
+
+    &:before {
+      @apply bg-current scale-100;
+      box-shadow:
+        0 -1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset,
+        0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset,
+        0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1));
+    }
+
+    @media (forced-colors: active) {
+      &:before {
+        @apply outline -outline-offset-1;
+      }
+    }
+
+    @media print {
+      &:before {
+        outline: 0.25rem solid;
+        outline-offset: -1rem;
+      }
+    }
+  }
+
+  &:disabled {
+    @apply cursor-not-allowed opacity-20;
+  }
+}
+
+@utility radio-xs {
+  @apply p-0.5;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 4);
+  }
+}
+
+@utility radio-sm {
+  @apply p-0.75;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 5);
+  }
+}
+
+@utility radio-md {
+  @apply p-1;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+  }
+}
+
+@utility radio-lg {
+  @apply p-1.25;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 7);
+  }
+}
+
+@utility radio-xl {
+  @apply p-1.5;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 8);
+  }
+}

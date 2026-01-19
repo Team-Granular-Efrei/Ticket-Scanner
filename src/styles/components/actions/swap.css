@@ -1,0 +1,125 @@
+@utility swap {
+  @layer components.l1.l2.l3 {
+    @apply relative inline-grid cursor-pointer place-content-center align-middle select-none;
+
+    input {
+      @apply appearance-none;
+      border: none;
+    }
+
+    input:indeterminate ~ .swap-on {
+      @apply opacity-0 pointer-events-none;
+    }
+
+    input:is(:checked, :indeterminate) {
+      & ~ .swap-off {
+        @apply opacity-0 pointer-events-none;
+      }
+    }
+
+    input:checked ~ .swap-on,
+    input:indeterminate ~ .swap-indeterminate {
+      @apply opacity-100 pointer-events-auto;
+      backface-visibility: visible;
+    }
+  }
+}
+
+@utility swap-on {
+  @layer components.l1.l2.l3 {
+    @apply col-start-1 row-start-1 opacity-0 pointer-events-none;
+    will-change: opacity, transform;
+    transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: transform, rotate, opacity;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+      will-change: auto;
+    }
+  }
+}
+
+@utility swap-off {
+  @layer components.l1.l2.l3 {
+    @apply col-start-1 row-start-1;
+    will-change: opacity, transform;
+    transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: transform, rotate, opacity;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+      will-change: auto;
+    }
+  }
+}
+
+@utility swap-indeterminate {
+  @layer components.l1.l2.l3 {
+    @apply col-start-1 row-start-1 opacity-0 pointer-events-none;
+    will-change: opacity, transform;
+    transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: transform, rotate, opacity;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+      will-change: auto;
+    }
+  }
+}
+
+@utility swap-active {
+  @layer components.l1.l2 {
+    & > .swap-off {
+      @apply opacity-0 pointer-events-none;
+    }
+
+    & > .swap-on {
+      @apply opacity-100 pointer-events-auto;
+    }
+  }
+}
+
+@utility swap-rotate {
+  @layer components.l1.l2 {
+    .swap-on,
+    input:indeterminate ~ .swap-on {
+      @apply rotate-45;
+    }
+
+    input:is(:checked, :indeterminate) ~ .swap-on,
+    &.swap-active .swap-on {
+      @apply rotate-0;
+    }
+
+    input:is(:checked, :indeterminate) ~ .swap-off,
+    &.swap-active .swap-off {
+      @apply -rotate-45;
+    }
+  }
+}
+
+@utility swap-flip {
+  @layer components.l1.l2 {
+    transform-style: preserve-3d;
+    perspective: 20rem;
+
+    .swap-on,
+    .swap-indeterminate,
+    input:indeterminate ~ .swap-on {
+      transform: rotateY(180deg);
+      backface-visibility: hidden;
+    }
+
+    input:is(:checked, :indeterminate) ~ .swap-on,
+    &.swap-active .swap-on {
+      transform: rotateY(0deg);
+    }
+
+    input:is(:checked, :indeterminate) ~ .swap-off,
+    &.swap-active .swap-off {
+      transform: rotateY(-180deg);
+      backface-visibility: hidden;
+      @apply opacity-100;
+    }
+  }
+}

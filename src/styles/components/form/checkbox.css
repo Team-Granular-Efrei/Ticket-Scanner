@@ -1,0 +1,126 @@
+@utility checkbox-* {
+  @apply color-contrast-(--input-color);
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility checkbox {
+  @layer components.l1.l2.l3 {
+    --checkbox-p: 0.25rem;
+    @apply rounded-lg relative inline-block shrink-0 cursor-pointer appearance-none p-(--checkbox-p) align-middle size-(--size);
+    color: var(--color-contrast, var(--color-base-content));
+    border: var(--border) solid var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+    box-shadow:
+      0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset,
+      0 0 #0000 inset,
+      0 0 #0000;
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--fx-noise);
+    transition:
+      background-color var(--duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow var(--duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1);
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:before {
+      @apply block size-full rotate-45 bg-current opacity-0 content-[""] text-md leading-3;
+      box-shadow: 0px 3px 0 0px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 70% 80%, 70% 100%);
+      transition:
+        clip-path calc(var(--duration, 300ms) + 100ms) cubic-bezier(0.4, 0, 0.2, 1),
+        rotate calc(var(--duration, 300ms) + 100ms) cubic-bezier(0.4, 0, 0.2, 1),
+        opacity calc(var(--duration, 300ms) + 300ms) cubic-bezier(0.4, 0, 0.2, 1);
+      transition-delay: 100ms;
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--input-color, currentColor);
+      outline-offset: 2px;
+    }
+
+    &:checked,
+    &[aria-checked="true"] {
+      background-color: var(--input-color, #0000);
+      box-shadow:
+        0 0 #0000 inset,
+        0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset,
+        0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1));
+
+      &:before {
+        @apply opacity-100;
+        clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+      }
+      @media (forced-colors: active) {
+        &:before {
+          @apply rotate-0 bg-[#0000] [--tw-content:"✔︎"] [clip-path:none];
+        }
+      }
+      @media print {
+        &:before {
+          @apply rotate-0 bg-[#0000] [--tw-content:"✔︎"] [clip-path:none];
+        }
+      }
+    }
+
+    &:indeterminate {
+      background-color: var(--input-color, color-mix(in oklab, currentColor 20%, #0000));
+      &:before {
+        @apply rotate-0 opacity-100;
+        translate: 0 -35%;
+        clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
+      }
+    }
+    &:disabled {
+      @apply cursor-not-allowed opacity-20;
+    }
+  }
+}
+
+@utility checkbox-xs {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.125rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 4);
+    }
+  }
+}
+
+@utility checkbox-sm {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.1875rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 5);
+    }
+  }
+}
+
+@utility checkbox-md {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.25rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 6);
+    }
+  }
+}
+
+@utility checkbox-lg {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.3125rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 7);
+    }
+  }
+}
+
+@utility checkbox-xl {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.375rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 8);
+    }
+  }
+}

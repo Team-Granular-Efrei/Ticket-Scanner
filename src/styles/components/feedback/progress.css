@@ -1,0 +1,211 @@
+@utility progress {
+  @layer components.l1.l2.l3 {
+    @apply block rounded-md text-base-content relative w-full appearance-none overflow-hidden;
+    --track-color: color-mix(in oklab, currentColor 8%, transparent);
+    --size: 8px;
+    background-color: var(--track-color);
+    height: var(--size);
+
+    &:indeterminate {
+      background-image: repeating-linear-gradient(90deg, currentColor -1%, currentColor 10%, #0000 10%, #0000 90%);
+      background-size: 200%;
+      background-position-x: 15%;
+      @media (prefers-reduced-motion: no-preference) {
+        @apply animate-progress;
+      }
+
+      @supports (-moz-appearance: none) {
+        &::-moz-progress-bar {
+          @apply bg-transparent;
+          @media (prefers-reduced-motion: no-preference) {
+            @apply animate-progress;
+            background-image: repeating-linear-gradient(90deg, currentColor -1%, currentColor 10%, #0000 10%, #0000 90%);
+            background-size: 200%;
+            background-position-x: 15%;
+          }
+        }
+      }
+    }
+
+    &[aria-label]::after {
+      content: attr(aria-label);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      color: white;
+      mix-blend-mode: difference;
+    }
+
+    @supports (-moz-appearance: none) {
+      &::-moz-progress-bar {
+        @apply rounded-md bg-current;
+      }
+    }
+
+    @supports (-webkit-appearance: none) {
+      &::-webkit-progress-bar {
+        @apply rounded-md bg-transparent;
+      }
+
+      &::-webkit-progress-value {
+        @apply rounded-md;
+        background-color: currentColor;
+      }
+    }
+  }
+}
+
+@utility progress-radial {
+  @layer components.l1.l2.l3 {
+    @apply relative inline-grid place-content-center rounded-full align-middle box-content;
+    --value: 0;
+    --size: 5rem;
+    --thickness: calc(var(--size) / 10);
+    --radialprogress: calc(var(--value) * 1%);
+    --track-color: color-mix(in oklab, currentColor 8%, transparent);
+    width: var(--size);
+    height: var(--size);
+    background-color: transparent;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: --radialprogress 0.3s linear;
+    }
+
+    /* Background track (remaining value) */
+    &:before {
+      @apply absolute inset-0 rounded-full;
+      content: "";
+      background:
+        radial-gradient(farthest-side, currentColor 98%, #0000) top / var(--thickness) var(--thickness) no-repeat,
+        conic-gradient(currentColor var(--radialprogress), var(--track-color) var(--radialprogress));
+      -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - var(--thickness)), #000 calc(100% + 0.5px - var(--thickness)));
+      mask: radial-gradient(farthest-side, #0000 calc(100% - var(--thickness)), #000 calc(100% + 0.5px - var(--thickness)));
+    }
+
+    /* Progress indicator dot */
+    &:after {
+      @apply absolute rounded-full bg-current;
+      content: "";
+      inset: calc(50% - var(--thickness) / 2);
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.3s linear;
+      }
+
+      transform: rotate(calc(var(--value) * 3.6deg - 90deg)) translate(calc(var(--size) / 2 - 50%));
+    }
+
+    /* Indeterminate state - spinning loader */
+    &[aria-busy="true"] {
+      @apply loading w-(--size) inline-grid truncate pointer-events-auto;
+      &:after {
+        @apply hidden;
+      }
+    }
+  }
+}
+
+@utility progress-radial-filled {
+  @layer components.l1.l2.l3 {
+    @apply relative inline-grid place-content-center rounded-full align-middle box-content;
+    --value: 0;
+    --size: 5rem;
+    --thickness: calc(var(--size) / 10);
+    --radialprogress: calc(var(--value) * 1%);
+    --track-color: color-mix(in oklab, currentColor 8%, transparent);
+    --fill-color: currentColor;
+    width: var(--size);
+    height: var(--size);
+    background-color: transparent;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: --radialprogress 0.3s linear;
+    }
+
+    /* Filled circle background using conic-gradient */
+    &:before {
+      @apply absolute inset-0 rounded-full;
+      content: "";
+      background: conic-gradient(var(--fill-color) var(--radialprogress), var(--track-color) var(--radialprogress));
+      @media (prefers-reduced-motion: no-preference) {
+        transition: background 0.3s linear;
+      }
+    }
+  }
+}
+
+/* Existing utilities */
+@utility progress-xs {
+  @layer components.l1.l2 {
+    @apply text-2xs;
+    --size: 1.5rem;
+  }
+}
+
+@utility progress-sm {
+  @layer components.l1.l2 {
+    @apply text-xs;
+    --size: 2rem;
+  }
+}
+
+@utility progress-md {
+  @layer components.l1.l2 {
+    @apply text-xs;
+    --size: 2.5rem;
+  }
+}
+
+@utility progress-lg {
+  @layer components.l1.l2 {
+    @apply text-sm;
+    --size: 3rem;
+  }
+}
+
+@utility progress-xl {
+  @layer components.l1.l2 {
+    @apply text-md;
+    --size: 4rem;
+  }
+}
+
+@utility progress-size-* {
+  @layer components.l1.l2 {
+    --size: calc(var(--spacing) * --value(number));
+    --size: --value([*]);
+  }
+}
+
+@utility progress-thickness-* {
+  @layer components.l1.l2 {
+    --thickness: calc(var(--spacing) * --value(number));
+    --thickness: --value([*]);
+  }
+}
+
+@utility progress-track-* {
+  @layer components.l1.l2 {
+    --track-color: --value(--color-*, [*]);
+    --track-color: --value("current") color;
+  }
+}
+
+@utility progress-fill-* {
+  @layer components.l1.l2 {
+    --fill-color: --value(--color-*, [*]);
+    --fill-color: --value("current") color;
+  }
+}
+
+@theme inline {
+  --animate-progress: progress 5s ease-in-out infinite;
+  @keyframes progress {
+    50% {
+      background-position-x: -115%;
+    }
+  }
+}

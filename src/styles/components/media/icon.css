@@ -1,0 +1,5 @@
+@utility icon {
+  @layer components.l1.l2.l3 {
+    @apply inline-block size-[1em] min-h-lh shrink-0 align-middle text-current leading-[1em];
+  }
+}
