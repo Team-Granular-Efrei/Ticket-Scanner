@@ -1,0 +1,224 @@
+@utility collapse {
+  &:not(td, tr, colgroup) {
+    visibility: revert-layer;
+  }
+
+  @layer components.l1.l2.l3 {
+    --duration: 400ms;
+    @apply grid relative overflow-hidden w-full grid-cols-1 grid-rows-[max-content_0fr] isolate;
+    transition: var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: grid-template-rows;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    > input:is([type="checkbox"], [type="radio"]) {
+      @apply appearance-none opacity-0 z-1 w-full min-h-lh row-start-1 col-start-1;
+      transition: background-color 200ms ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+
+    &:focus-visible,
+    &:has(> input:is([type="checkbox"], [type="radio"]):focus-visible),
+    &:has(summary:focus-visible) {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close)),
+    &:not(.collapse-close):has(> input:is([type="checkbox"], [type="radio"]):checked) {
+      grid-template-rows: max-content 1fr;
+    }
+
+    &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close)) > .collapse-content,
+    &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+      @apply [content-visibility:visible] min-h-fit;
+
+      @supports not (content-visibility: visible) {
+        visibility: visible;
+      }
+    }
+
+    &:not(.collapse-close) {
+      > input[type="checkbox"],
+      > input[type="radio"]:not(:checked),
+      > .collapse-title {
+        cursor: pointer;
+      }
+    }
+
+    &[tabindex]:focus:not(.collapse-close, .collapse[open]),
+    &[tabindex]:focus-within:not(.collapse-close, .collapse[open]) {
+      > .collapse-title {
+        cursor: unset;
+      }
+    }
+
+    &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close)) > :where(.collapse-content),
+    &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+      padding-bottom: 1rem;
+      /* !important to override padding removal when closed */
+    }
+  }
+
+  @layer components.l1.l2 {
+    &:is([open]) {
+      &.collapse-arrow {
+        > .collapse-title:after {
+          @apply rotate-225 [translate:0_-50%];
+        }
+      }
+    }
+
+    &.collapse-open {
+      &.collapse-arrow {
+        > .collapse-title:after {
+          @apply rotate-225 [translate:0_-50%];
+        }
+      }
+    }
+
+    &[tabindex].collapse-arrow:focus:not(.collapse-close),
+    &.collapse-arrow[tabindex]:focus-within:not(.collapse-close) {
+      > .collapse-title:after {
+        @apply rotate-225;
+      }
+    }
+
+    &.collapse-arrow:not(.collapse-close) {
+      > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+        translate: 0 -50%;
+      }
+    }
+
+    &[open] {
+      &.collapse-plus {
+        > .collapse-title:after {
+          @apply content-["−"];
+        }
+      }
+    }
+
+    &.collapse-open {
+      &.collapse-plus {
+        > .collapse-title:after {
+          @apply content-["−"];
+        }
+      }
+    }
+
+    &[tabindex].collapse-plus:focus:not(.collapse-close) {
+      > .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+
+    &.collapse-plus:not(.collapse-close) {
+      > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+  }
+
+  @layer components.l1.l2.l3 {
+    &:is(details) {
+      width: 100%;
+
+      &::details-content {
+        @apply [interpolate-size:allow-keywords] h-0;
+        transition: all var(--duration) ease-out allow-discrete;
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none !important;
+        }
+      }
+
+      &:where([open])::details-content {
+        height: auto;
+      }
+
+      & summary {
+        @apply relative block [outline:none];
+
+        &::-webkit-details-marker {
+          display: none;
+        }
+      }
+
+      & > .collapse-content {
+        content-visibility: visible;
+      }
+    }
+  }
+}
+
+@utility collapse-content {
+  @layer components.l1.l2.l3 {
+    @apply px-4 min-h-0 cursor-[unset] row-start-2 col-start-1 [content-visibility:hidden];
+    transition: var(--duration) ease-out allow-discrete;
+    transition-property: content-visibility, visibility, min-height, padding, background-color;
+
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+  }
+}
+
+@utility collapse-arrow {
+  @layer components.l1.l2 {
+    & > .collapse-title:after {
+      @apply content-[""] absolute top-1/2 end-[1.4rem] block size-2 rotate-45 pointer-events-none [box-shadow:2px_2px] [translate:0_-100%] origin-[75%_75%];
+      transition: all var(--duration) ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+  }
+}
+
+@utility collapse-plus {
+  @layer components.l1.l2 {
+    > .collapse-title:after {
+      @apply content-["+"] absolute top-[0.9rem] end-[1.4rem] block size-2 pointer-events-none;
+      transition: all var(--duration) ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+  }
+}
+
+@utility collapse-title {
+  @layer components.l1.l2.l3 {
+    @apply relative w-full p-4 pe-3 min-h-lh col-start-1 row-start-1;
+    transition: background-color var(--duration) ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+  }
+}
+
+@utility collapse-open {
+  @layer components.l1.l2 {
+    grid-template-rows: max-content 1fr;
+
+    & > .collapse-content {
+      @apply min-h-fit pb-4 [content-visibility:visible];
+
+      @supports not (content-visibility: visible) {
+        visibility: visible;
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 160
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useAriaPropsSupportedByRole": "off"
+      },
+      "style": {
+        "noShoutyConstants": "warn",
+        "useBlockStatements": "info",
+        "useCollapsedElseIf": "warn",
+        "useForOf": "warn",
+        "useFragmentSyntax": "warn",
+        "useShorthandAssign": "info",
+        "useThrowNewError": "warn",
+        "useThrowOnlyError": "warn"
+      },
+      "nursery": {
+        "useSortedClasses": "warn"
+      },
+      "suspicious": {
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["error", "warn", "log"]
+          }
+        },
+        "noEvolvingTypes": "error",
+        "useErrorMessage": "error",
+        "useNumberToFixedDigitsArgument": "warn",
+        "noEmptyBlock": "error",
+        "noConfusingVoidType": "off"
+      },
+      "correctness": {
+        "noUnknownFunction": "off",
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn"
+      },
+      "complexity": {
+        "noBannedTypes": "off",
+        "noImportantStyles": "off"
+      }
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 160,
+      "lineEnding": "lf",
+      "quoteStyle": "double"
+    },
+    "parser": {
+      "tailwindDirectives": true,
+      "allowWrongLineComments": true,
+      "cssModules": true
+    },
+    "assist": {
+      "enabled": true
+    }
+  }
+}

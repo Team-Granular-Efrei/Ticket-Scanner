@@ -1,0 +1,48 @@
+@utility validator {
+  &:user-valid,
+  &:has(:user-valid) {
+    &,
+    &:focus,
+    &:checked,
+    &[aria-checked="true"],
+    &:focus-within {
+      --input-color: var(--color-success);
+    }
+  }
+
+  &:user-invalid,
+  &:has(:user-invalid),
+  &[aria-invalid]:not([aria-invalid="false"]),
+  &:has([aria-invalid]:not([aria-invalid="false"])) {
+    &,
+    &:focus,
+    &:checked,
+    &[aria-checked="true"],
+    &:focus-within {
+      --input-color: var(--color-error);
+    }
+
+    & ~ .validator-hint {
+      @apply text-error;
+      content-visibility: visible;
+      max-height: 200px;
+
+      @supports not (content-visibility: visible) {
+        visibility: visible;
+      }
+    }
+  }
+}
+
+@utility validator-hint {
+  @apply text-xs max-h-0 overflow-hidden;
+  content-visibility: hidden;
+  transition: all var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)) allow-discrete;
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @supports not (content-visibility: hidden) {
+    visibility: hidden;
+  }
+}

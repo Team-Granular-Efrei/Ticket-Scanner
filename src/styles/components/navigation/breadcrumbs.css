@@ -1,0 +1,77 @@
+@utility breadcrumbs {
+  @layer components.l1.l2.l3 {
+    @apply max-w-full overflow-x-auto py-2;
+
+    & > ul,
+    & > ol {
+      @apply flex min-h-min items-center whitespace-nowrap;
+
+      & > li {
+        @apply flex items-center;
+
+        & > * {
+          @apply flex cursor-pointer items-center gap-2 hover:underline;
+
+          &:focus {
+            @apply outline-hidden;
+          }
+
+          &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+          }
+        }
+
+        & + *:before {
+          --tw-content: var(--breadcrumbs-separator, "❯");
+          content: var(--tw-content);
+          @apply mx-2 block opacity-40 [scale:.85];
+        }
+      }
+    }
+  }
+}
+
+@utility breadcrumbs-slash {
+  @layer components.l1.l2 {
+    --breadcrumbs-separator: "/";
+
+    & > ul > li + *:before,
+    & > ol > li + *:before {
+      scale: 0.85;
+    }
+  }
+}
+
+@utility breadcrumbs-chevron {
+  @layer components.l1.l2 {
+    --breadcrumbs-separator: "❯";
+
+    & > ul > li + *:before,
+    & > ol > li + *:before {
+      scale: 0.85;
+    }
+  }
+}
+
+@utility breadcrumbs-dot {
+  @layer components.l1.l2 {
+    --breadcrumbs-separator: "•";
+
+    & > ul > li + *:before,
+    & > ol > li + *:before {
+      scale: 1.25;
+    }
+  }
+}
+
+@utility breadcrumbs-pipe {
+  @layer components.l1.l2 {
+    --breadcrumbs-separator: "|";
+
+    & > ul > li + *:before,
+    & > ol > li + *:before {
+      scale: 0.85;
+    }
+  }
+}

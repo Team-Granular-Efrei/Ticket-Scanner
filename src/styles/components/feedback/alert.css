@@ -1,0 +1,43 @@
+@utility alert-* {
+  @apply color-contrast-(--alert-color);
+  --alert-color: --value(--color-*, [*]);
+}
+
+@utility alert {
+  /* override the border style of Tailwind CSS Typography plugin */
+  --depth: 1;
+  --alert-color: var(--color-base-200);
+  --alert-bg: var(--alert-color);
+  --alert-border: var(--alert-color);
+  border-width: var(--border);
+  border-color: var(--alert-border);
+  border-style: solid;
+  @apply rounded-lg flex items-center gap-4 px-4 py-3;
+  color: var(--color-contrast, var(--color-base-content));
+  background-color: var(--alert-color);
+  text-align: start;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow:
+    0 3px 0 -2px oklch(100% 0 0 / calc(var(--depth) * 0.08)) inset,
+    0 1px color-mix(in oklab, color-mix(in oklab, #000 20%, var(--alert-color)) calc(var(--depth) * 20%), #0000),
+    0 4px 3px -2px oklch(0% 0 0 / calc(var(--depth) * 0.08));
+  &:has(:nth-child(2)) {
+    grid-template-columns: auto minmax(auto, 1fr);
+  }
+}
+
+@utility alert-soft {
+  color: var(--alert-color);
+  background: color-mix(in oklab, var(--alert-color) 8%, var(--color-base-100));
+  border-color: color-mix(in oklab, var(--alert-color) 10%, var(--color-base-100));
+  box-shadow: none;
+  background-image: none;
+}
+
+@utility alert-outline {
+  background-color: #0000;
+  color: var(--alert-color);
+  box-shadow: none;
+  background-image: none;
+}

@@ -1,0 +1,170 @@
+@layer theme, base, components, utilities, enhancements;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "./theme.css";
+
+@import "tailwindcss/preflight.css" layer(base);
+
+@import "./components/index.css";
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./utility.css";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant light (&:where([data-theme="light"] *));
+@custom-variant dark (&:where([data-theme="dark"] *));
+
+@theme light {
+  --color-base-100: var(---color-base-100, oklch(100% 0 0));
+  --color-base-200: var(---color-base-200, oklch(98% 0 0));
+  --color-base-300: var(---color-base-300, oklch(95% 0 0));
+  --color-base-content: var(---color-base-content, oklch(21% 0.006 285.885));
+  --color-primary: var(---color-primary, oklch(45% 0.24 277.023));
+  --color-primary-content: var(---color-primary-content, oklch(93% 0.034 272.788));
+  --color-secondary: var(---color-secondary, oklch(65% 0.241 354.308));
+  --color-secondary-content: var(---color-secondary-content, oklch(94% 0.028 342.258));
+  --color-accent: var(---color-accent, oklch(77% 0.152 181.912));
+  --color-accent-content: var(---color-accent-content, oklch(38% 0.063 188.416));
+  --color-neutral: var(---color-neutral, oklch(14% 0.005 285.823));
+  --color-neutral-content: var(---color-neutral-content, oklch(92% 0.004 286.32));
+  --color-info: var(---color-info, oklch(74% 0.16 232.661));
+  --color-info-content: var(---color-info-content, oklch(29% 0.066 243.157));
+  --color-success: var(---color-success, oklch(76% 0.177 163.223));
+  --color-success-content: var(---color-success-content, oklch(37% 0.077 168.94));
+  --color-warning: var(---color-warning, oklch(82% 0.189 84.429));
+  --color-warning-content: var(---color-warning-content, oklch(41% 0.112 45.904));
+  --color-error: var(---color-error, oklch(71% 0.194 13.428));
+  --color-error-content: var(---color-error-content, oklch(27% 0.105 12.094));
+  --color-muted: var(---color-muted, oklch(0.71 0.0129 286.07));
+}
+
+@layer base {
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --color-fg: var(--color-black);
+    --color-border: var(--color-gray-200);
+    --color-focus-ring: var(--color-gray-800);
+
+    --color-shadow: var(--color-gray-900);
+    --color-shadow-5: --alpha(var(--color-black) / 5%);
+    --color-shadow-10: --alpha(var(--color-black) / 10%);
+    --color-shadow-16: --alpha(var(--color-black) / 16%);
+    --color-shadow-30: --alpha(var(--color-black) / 30%);
+  }
+
+  :root[data-theme="dark"] {
+    --color-fg: var(--color-gray-50);
+    --color-border: var(--color-gray-800);
+    --color-focus-ring: var(--color-gray-200);
+
+    --color-shadow-10: --alpha(var(--color-black) / 64%);
+    --color-shadow-16: --alpha(var(--color-black) / 64%);
+    --color-shadow-20: inset --alpha(var(--color-gray-300) / 20%);
+    --color-shadow-30: inset --alpha(var(--color-gray-300) / 30%);
+
+    color-scheme: dark;
+    ---color-base-100: oklch(25.33% 0.016 252.42);
+    ---color-base-200: oklch(23.26% 0.014 253.1);
+    ---color-base-300: oklch(21.15% 0.012 254.09);
+    ---color-base-content: oklch(97.807% 0.029 256.847);
+    ---color-primary: oklch(58% 0.233 277.117);
+    ---color-primary-content: oklch(96% 0.018 272.314);
+    ---color-secondary: oklch(65% 0.241 354.308);
+    ---color-secondary-content: oklch(94% 0.028 342.258);
+    ---color-accent: oklch(77% 0.152 181.912);
+    ---color-accent-content: oklch(38% 0.063 188.416);
+    ---color-neutral: oklch(14% 0.005 285.823);
+    ---color-neutral-content: oklch(92% 0.004 286.32);
+    ---color-info: oklch(74% 0.16 232.661);
+    ---color-info-content: oklch(29% 0.066 243.157);
+    ---color-success: oklch(76% 0.177 163.223);
+    ---color-success-content: oklch(37% 0.077 168.94);
+    ---color-warning: oklch(82% 0.189 84.429);
+    ---color-warning-content: oklch(41% 0.112 45.904);
+    ---color-error: oklch(71% 0.194 13.428);
+    ---color-error-content: oklch(27% 0.105 12.094);
+    ---color-muted: oklch(19.03% 0.0133 253.218);
+  }
+
+  :root {
+    --header-height: 64px;
+    --content-height: calc(100dvh - var(--header-height));
+    --font-quicksand: "Quicksand", sans-serif;
+    --radius-selector: 0.5rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+    --fx-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.34' numOctaves='4' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23a)' opacity='0.2'%3E%3C/rect%3E%3C/svg%3E");
+    scrollbar-color: currentColor #0000;
+  }
+
+  :root {
+    scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) #0000;
+  }
+
+  @media screen and (min-width: 48rem) {
+    :root {
+      --header-height: 104px;
+    }
+  }
+
+  html {
+    @apply bg-base-100 text-base-content;
+    --root-bg: var(--color-base-100);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    touch-action: manipulation;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    tab-size: 4;
+  }
+
+  body {
+    @apply text-md font-medium relative;
+    font-family: var(--font-quicksand);
+  }
+
+  *,
+  *::before,
+  *::after,
+  *::backdrop {
+    @apply box-border border-0 border-solid border-(--color-border);
+  }
+
+  * {
+    @apply m-0 p-0 wrap-break-word;
+    word-wrap: break-word;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+[role="group"][data-attached] {
+  & > :not(:last-of-type) {
+    @apply -me-px;
+  }
+
+  & > :first-of-type:not(:last-of-type) {
+    @apply rounded-tr-none rounded-br-none border-r-0;
+  }
+
+  & > :not(:first-of-type):not(:last-of-type) {
+    @apply rounded-none border-r-0;
+  }
+
+  & > :not(:first-of-type):last-of-type {
+    @apply rounded-tl-none rounded-bl-none;
+  }
+}

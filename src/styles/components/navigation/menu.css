@@ -1,0 +1,194 @@
+@utility menu {
+  @layer components.l1.l2.l3 {
+    --menu-bg: var(--menu-color, var(--color-neutral));
+    --menu-fg: var(--color-neutral-content);
+    @apply flex w-fit flex-col flex-wrap p-2;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+
+    :where(li ul) {
+      @apply relative p-0 ms-4 ps-2 whitespace-nowrap;
+
+      &:before {
+        @apply content-[""] bg-base-content absolute opacity-10 inset-[0.75rem_auto_0.75rem_0] w-(--border);
+      }
+    }
+
+    :where(li) {
+      @apply relative flex shrink-0 flex-col flex-wrap items-stretch text-start;
+    }
+
+    :where(li:empty) {
+      @apply bg-base-content opacity-10;
+      margin: 0.5rem 1rem;
+      height: 1px;
+    }
+  }
+
+  @layer components.l1.l2 {
+    :where(li) {
+      &.menu-disabled,
+      &:not(.menu-title) > *:not(ul, details, .menu-title, .btn):is(:disabled, [disabled], [aria-disabled="true"]),
+      &:not(.menu-title) > details > summary:not(.menu-title):is(:disabled, [disabled], [aria-disabled="true"]) {
+        @apply pointer-events-none;
+        --menu-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+        --menu-bg: #0000;
+        --menu-shadow: "";
+        --menu-noise: none;
+      }
+    }
+
+    :where(li:not(.menu-title) > *:not(ul, details, .menu-title, .btn)),
+    :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+      @apply rounded-md grid grid-flow-col justify-start items-center gap-2 text-start font-semibold text-balance select-none cursor-pointer [outline:none];
+      font-size: var(--menu-fontsize);
+      line-height: var(--tw-leading);
+      padding: var(--menu-p, 0.375rem 0.75rem);
+      grid-auto-columns: minmax(auto, max-content) auto max-content;
+      background-color: var(--menu-bg);
+      color: var(--menu-fg);
+      background-size: auto, calc(var(--menu-noise) * 100%);
+      background-image: none, var(--menu-noise);
+      box-shadow: var(--menu-shadow);
+      transition: 200ms cubic-bezier(0, 0, 0.2, 1);
+      transition-property: color, background-color, box-shadow;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+
+      &:not(.menu-active, label:has(input:focus), :hover, :focus-visible, :active, [aria-selected="true"]) {
+        --menu-bg: #0000;
+        --menu-noise: none;
+        --menu-fg: "";
+        --menu-shadow: "";
+      }
+    }
+
+    :where(
+        li:not(.menu-title, :disabled, [disabled], [aria-disabled="true"]) > *:not(ul, details, .menu-title),
+        li:not(.menu-title, :disabled, [disabled], [aria-disabled="true"]) > details > summary:not(.menu-title)
+      ) {
+      &:is(label:has(input:focus)),
+      &:is(:hover, :focus-visible, :active, [aria-selected="true"]) {
+        --menu-shadow: 0 2px calc(var(--depth) * 3px) -2px var(--menu-bg);
+        --menu-noise: var(--fx-noise);
+      }
+    }
+
+    details {
+      @apply [outline:none];
+    }
+  }
+}
+
+@utility menu-* {
+  @layer components.l1.l2.l3 {
+    --menu-color: --value(--color-*, [*]);
+    --menu-fg: var(--color-contrast);
+    @apply color-contrast-(--menu-color);
+  }
+}
+
+@utility menu-active {
+  @layer components.l1.l2 {
+    --menu-shadow: 0 2px calc(var(--depth) * 3px) -2px var(--menu-bg);
+    --menu-noise: var(--fx-noise);
+  }
+}
+
+@utility menu-title {
+  @layer components.l1.l2.l3 {
+    @apply text-base-content/40 font-bold;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: var(--menutitle-p, 0.75rem 0.5rem);
+  }
+}
+
+@utility menu-horizontal {
+  @layer components.l1.l2 {
+    @apply inline-flex flex-row;
+  }
+}
+
+@utility menu-vertical {
+  @layer components.l1.l2 {
+    @apply inline-flex flex-col;
+  }
+}
+
+@utility menu-xs {
+  @layer components.l1.l2 {
+    :where(li:not(.menu-title) > *:not(ul, details, .menu-title)),
+    :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+      --menu-p: 0.25rem 0.5rem;
+      --menu-fontsize: 0.6875rem;
+      --tw-leading: 0.75rem;
+    }
+
+    .menu-title {
+      --menutitle-p: 0.25rem 0.5rem;
+    }
+  }
+}
+
+@utility menu-sm {
+  @layer components.l1.l2 {
+    :where(li:not(.menu-title) > *:not(ul, details, .menu-title)),
+    :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+      --menu-p: 0.25rem 0.625rem;
+      --menu-fontsize: 0.6875rem;
+      --tw-leading: 0.75rem;
+    }
+
+    .menu-title {
+      --menutitle-p: 0.5rem 0.75rem;
+    }
+  }
+}
+
+@utility menu-md {
+  @layer components.l1.l2 {
+    :where(li:not(.menu-title) > *:not(ul, details, .menu-title)),
+    :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+      --menu-p: 0.375rem 0.75rem;
+      --menu-fontsize: 0.875rem;
+      --tw-leading: 1.25rem;
+    }
+
+    .menu-title {
+      --menutitle-p: 0.5rem 0.75rem;
+    }
+  }
+}
+
+@utility menu-lg {
+  @layer components.l1.l2 {
+    :where(li:not(.menu-title) > *:not(ul, details, .menu-title)),
+    :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+      --menu-p: 0.375rem 1rem;
+      --menu-fontsize: 1.125rem;
+      --tw-leading: 1.75rem;
+    }
+
+    .menu-title {
+      --menutitle-p: 0.75rem 1.5rem;
+    }
+  }
+}
+
+@utility menu-xl {
+  @layer components.l1.l2 {
+    :where(li:not(.menu-title) > *:not(ul, details, .menu-title)),
+    :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+      --menu-p: 0.375rem 1.25rem;
+      --menu-fontsize: 1.375rem;
+      --tw-leading: 2rem;
+    }
+
+    .menu-title {
+      --menutitle-p: 0.75rem 1.5rem;
+    }
+  }
+}

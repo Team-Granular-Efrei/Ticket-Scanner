@@ -1,0 +1,178 @@
+@utility toggle-* {
+  &:checked,
+  &[aria-checked="true"] {
+    --input-color: --value(--color-*, [*]);
+  }
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility toggle {
+  border: var(--border) solid var(--toggle-border, currentColor);
+  color: var(--color-contrast, var(--input-color, var(--color-base-content)));
+  @apply relative inline-grid shrink-0 cursor-pointer appearance-none place-content-center align-middle select-none;
+  background-color: var(--toggle-bg);
+  grid-template-columns: 0fr 1fr 1fr;
+  --radius-selector-max: calc(var(--radius-selector) + var(--radius-selector) + var(--radius-selector));
+  border-radius: calc(var(--radius-selector) + min(var(--toggle-p), var(--radius-selector-max)) + min(var(--border), var(--radius-selector-max)));
+
+  padding: var(--toggle-p);
+  box-shadow: 0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), #0000) inset;
+  --toggle-p: calc(var(--size) * 0.125);
+  --size: calc(var(--size-selector, 0.25rem) * 6);
+  width: calc((var(--size) * 2) - (var(--border) + var(--toggle-p)) * 2);
+  height: var(--size);
+  transition: all var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  /* icons in toggle */
+  & > * {
+    @apply z-1 col-span-1 col-start-2 row-start-1 h-full cursor-pointer appearance-none p-0.5;
+    border: none;
+    background-color: #0000;
+    transition:
+      opacity var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+      rotate var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:focus {
+      @apply outline-hidden;
+    }
+    &:nth-child(2) {
+      @apply color-contrast-[currentColor] text-(--color-contrast);
+      rotate: 0deg;
+    }
+    &:nth-child(3) {
+      @apply color-contrast-[currentColor] text-(--color-contrast) opacity-0;
+      rotate: -15deg;
+    }
+  }
+
+  &:has(:checked) {
+    & > :nth-child(2) {
+      @apply opacity-0;
+      rotate: 15deg;
+    }
+    & > :nth-child(3) {
+      @apply opacity-100;
+      rotate: 0deg;
+    }
+  }
+
+  &:before {
+    @apply rounded-full relative start-0 col-start-2 row-start-1 aspect-square h-full;
+    translate: 0;
+    --tw-content: "";
+    content: var(--tw-content);
+    box-shadow:
+      0 -1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset,
+      0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset,
+      0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), #0000);
+
+    background-color: currentColor;
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--fx-noise);
+  }
+  transition: all var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (forced-colors: active) {
+    &:before {
+      @apply outline -outline-offset-1;
+    }
+  }
+  @media print {
+    &:before {
+      outline: 0.25rem solid;
+      outline-offset: -1rem;
+    }
+  }
+
+  &:focus-visible,
+  &:has(:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  &:checked,
+  &[aria-checked="true"],
+  &:has(> input:checked) {
+    grid-template-columns: 1fr 1fr 0fr;
+    @apply color-contrast-(--input-color,var(--color-base-content));
+    --toggle-bg: var(--input-color, var(--color-base-content));
+  }
+
+  &:indeterminate {
+    grid-template-columns: 0.5fr 1fr 0.5fr;
+  }
+
+  &:disabled {
+    @apply cursor-not-allowed opacity-30;
+
+    &:before {
+      @apply bg-transparent;
+      border: var(--border) solid currentColor;
+    }
+  }
+}
+
+/* responsive */
+
+@utility toggle-xs {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 4);
+  }
+}
+
+@utility toggle-sm {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 5);
+  }
+}
+
+@utility toggle-md {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+  }
+}
+
+@utility toggle-lg {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 7);
+  }
+}
+
+@utility toggle-xl {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 8);
+  }
+}
+
+@utility toggle-outline {
+  --toggle-border: currentColor;
+  &:checked,
+  &[aria-checked="true"],
+  &:has(> input:checked) {
+    --color-contrast: var(--input-color);
+    --toggle-bg: "#0000";
+  }
+}
+
+@utility toggle-soft {
+  --toggle-bg: color-mix(in oklab, var(--input-color, var(--color-base-content)) 8%, var(--color-base-100));
+  --toggle-border: color-mix(in oklab, var(--input-color, var(--color-base-content)) 10%, var(--color-base-100));
+  --toggle-noise: none;
+}
