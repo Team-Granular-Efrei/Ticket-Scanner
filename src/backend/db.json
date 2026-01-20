@@ -1,11 +1,65 @@
 {
   "receipts": [
     {
-      "id": "1",
-      "date": "2026-01-19",
-      "total": 3.74,
-      "healthScore": 85,
-      "items": [{ "name": "Bananas", "price": 0.54, "category": "Healthy" }]
+      "id": "7fcb",
+      "merchant": {
+        "name": "Carrefour",
+        "type": "Dining"
+      },
+      "date": "2026-02-01",
+      "time": "00:00",
+      "total_spent": 20.25,
+      "currency": "EUR",
+      "tax_amount": 1.84,
+      "items": [
+        {
+          "name": "TARTE CITRON MERINGUEE",
+          "price": 2.5,
+          "quantity": 1,
+          "tags": ["Dessert"],
+          "id": "76cc8937-97dc-4d7b-a5df-959724e7992a"
+        },
+        {
+          "name": "FILET DE LIEU",
+          "price": 7.95,
+          "quantity": 1,
+          "tags": ["Protein"],
+          "id": "0f65ae17-c320-4984-aec6-d039b6d27cb4"
+        },
+        {
+          "name": "PETIT PAIN CLASSIQUE",
+          "price": 0.35,
+          "quantity": 1,
+          "tags": ["Carbohydrates"],
+          "id": "8e5dea2c-f572-4de7-8831-050e8e849eaa"
+        },
+        {
+          "name": "AIGUILLETTES DE POULET",
+          "price": 6.95,
+          "quantity": 1,
+          "tags": ["Protein"],
+          "id": "f2100fe3-2f88-489b-9a98-d51bbcc925d0"
+        },
+        {
+          "name": "SAUCE 3 FROMAGES",
+          "price": 0,
+          "quantity": 1,
+          "tags": ["Dairy"],
+          "id": "4ce7ab29-956f-40ca-8d13-46783fdd5cc7"
+        },
+        {
+          "name": "ILE FLOTTANTE GOURMANDE",
+          "price": 2.5,
+          "quantity": 1,
+          "tags": ["Dessert"],
+          "id": "1f012e2e-4221-447f-9ba6-672a8078d967"
+        }
+      ],
+      "analysis": {
+        "health_score": 60,
+        "financial_advice": "Consider cooking at home to save money and control portion sizes."
+      },
+      "savedAt": "2026-01-20T10:21:42.648Z"
     }
   ]
 }
