@@ -86,7 +86,7 @@ export default async function HistoryPage() {
 
                 {/* Amount */}
                 <div className="text-right">
-                  <p className="font-black text-base-content">${receipt.total_spent.toFixed(2)}</p>
+                  <p className="font-black text-base-content">${receipt.total_spent?.toFixed(2)}</p>
                   <p className={cn("font-bold text-[10px]", (receipt.analysis?.health_score || 0) > 70 ? "text-success" : "text-warning")}>
                     {receipt.analysis?.health_score} score
                   </p>
