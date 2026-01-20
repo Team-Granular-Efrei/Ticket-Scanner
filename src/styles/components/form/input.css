@@ -9,11 +9,6 @@
   border-color: var(--input-color);
   --size: calc(var(--size-field, 0.25rem) * 10);
   --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
-  transition: all var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   &:where(input) {
     @apply inline-flex;
