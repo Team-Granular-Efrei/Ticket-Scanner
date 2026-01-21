@@ -84,7 +84,6 @@ export default function Home() {
         <h1 className="font-black text-2xl tracking-tighter">
           Granular<span className="text-primary">.</span>
         </h1>
-        {data && <div className="badge badge-primary badge-outline">{data.analysis.health_score}/100</div>}
       </div>
 
       {/* --- STATE 1: IDLE (Scanner) --- */}
