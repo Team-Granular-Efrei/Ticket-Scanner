@@ -53,7 +53,7 @@ Depuis le bouton de à l'acceuil, permet de consulter :
 - Montants par achat
 - Nombre d'articles
 
-## 🛠 Technologies Utilisées
+## Technologies Utilisées
 
 - React 19, Next.js 16, TypeScript
 - Tailwind CSS v4
