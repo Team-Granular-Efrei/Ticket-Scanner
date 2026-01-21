@@ -21,7 +21,7 @@ async function getReceipts() {
 }
 
 export default async function HistoryPage() {
-  const receipts: (ReceiptData & { savedAt: string })[] = await getReceipts();
+  const receipts: (ReceiptData & { id: string | number; savedAt?: string })[] = await getReceipts();
 
   // Calculate Stats
   const totalSpent = receipts.reduce((acc, r) => acc + r.total_spent, 0);
@@ -64,36 +64,43 @@ export default async function HistoryPage() {
             </Link>
           </div>
         ) : (
-          receipts.map((receipt) => (
-            <div key={receipt.id} className="card w-full border border-base-200 bg-base-100 shadow-sm transition-colors hover:border-primary/50">
-              <div className="card-body flex-row items-center justify-between gap-4 p-4">
-                {/* Date Box */}
-                <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-base-200">
-                  <span className="font-bold text-[10px] text-base-content/40 uppercase">
-                    {new Date(receipt.date || receipt.savedAt).toLocaleDateString("en-US", { month: "short" })}
-                  </span>
-                  <span className="font-black text-lg leading-none">{new Date(receipt.date || receipt.savedAt).getDate()}</span>
-                </div>
+          receipts.map((receipt) => {
+            const dateSource = receipt.date ?? receipt.savedAt;
+            const dateValue = dateSource ? new Date(dateSource) : null;
 
-                {/* Details */}
-                <div className="min-w-0 flex-1">
-                  <h4 className="truncate font-bold text-base-content">{receipt.merchant?.name}</h4>
-                  <p className="flex items-center gap-1 truncate text-base-content/60 text-xs">
-                    <span className="badge badge-xs badge-ghost">{receipt.merchant?.type}</span>
-                    <span>• {receipt.items.length} items</span>
-                  </p>
-                </div>
+            return (
+              <Link key={receipt.id} href={`/history/${receipt.id}`} className="block">
+                <div className="card w-full border border-base-200 bg-base-100 shadow-sm transition-colors hover:border-primary/50">
+                  <div className="card-body flex-row items-center justify-between gap-4 p-4">
+                    {/* Date Box */}
+                    <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-base-200">
+                      <span className="font-bold text-[10px] text-base-content/40 uppercase">
+                        {dateValue ? dateValue.toLocaleDateString("en-US", { month: "short" }) : "--"}
+                      </span>
+                      <span className="font-black text-lg leading-none">{dateValue ? dateValue.getDate() : "--"}</span>
+                    </div>
 
-                {/* Amount */}
-                <div className="text-right">
-                  <p className="font-black text-base-content">${receipt.total_spent?.toFixed(2)}</p>
-                  <p className={cn("font-bold text-[10px]", (receipt.analysis?.health_score || 0) > 70 ? "text-success" : "text-warning")}>
-                    {receipt.analysis?.health_score} score
-                  </p>
+                    {/* Details */}
+                    <div className="min-w-0 flex-1">
+                      <h4 className="truncate font-bold text-base-content">{receipt.merchant?.name}</h4>
+                      <p className="flex items-center gap-1 truncate text-base-content/60 text-xs">
+                        <span className="badge badge-xs badge-ghost">{receipt.merchant?.type}</span>
+                        <span>• {receipt.items?.length || 0} items</span>
+                      </p>
+                    </div>
+
+                    {/* Amount */}
+                    <div className="text-right">
+                      <p className="font-black text-base-content">${receipt.total_spent?.toFixed(2)}</p>
+                      <p className={cn("font-bold text-[10px]", (receipt.analysis?.health_score || 0) > 70 ? "text-success" : "text-warning")}>
+                        {receipt.analysis?.health_score} score
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))
+              </Link>
+            );
+          })
         )}
       </div>
     </main>

@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { startTransition, useActionState, useEffect, useId, useState } from "react";
-import { LuCalendar, LuCamera, LuRefreshCw, LuSave, LuStore, LuTag } from "react-icons/lu";
+import { LuCalendar, LuCamera, LuRefreshCw, LuSave, LuStore, LuTag, LuWallet } from "react-icons/lu";
 import { type AnalysisState, analyzeReceipt } from "@/app/actions/analyze";
 import { BudgetCategory, type ReceiptData } from "@/lib/schema"; // Import new types
 import { cn } from "@/utils/tw";
@@ -84,7 +85,13 @@ export default function Home() {
         <h1 className="font-black text-2xl tracking-tighter">
           Granular<span className="text-primary">.</span>
         </h1>
-        {data && <div className="badge badge-primary badge-outline">{data.analysis.health_score}/100</div>}
+        <div className="flex items-center gap-2">
+          <Link href="/history" className="btn btn-ghost btn-sm">
+            <LuWallet className="h-4 w-4" />
+            Wallet
+          </Link>
+          {data && <div className="badge badge-primary badge-outline">{data.analysis.health_score}/100</div>}
+        </div>
       </div>
 
       {/* --- STATE 1: IDLE (Scanner) --- */}
