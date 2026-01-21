@@ -25,7 +25,6 @@ export default async function HistoryPage() {
 
   // Calculate Stats
   const totalSpent = receipts.reduce((acc, r) => acc + r.total_spent, 0);
-  const avgHealth = receipts.length > 0 ? Math.round(receipts.reduce((acc, r) => acc + (r.analysis?.health_score || 0), 0) / receipts.length) : 0;
 
   return (
     <main className="mx-auto min-h-screen max-w-md bg-base-100 p-4 pb-24">
@@ -40,14 +39,9 @@ export default async function HistoryPage() {
       {/* Dashboard Card */}
       <div className="card mb-8 w-full bg-primary text-primary-content shadow-xl">
         <div className="card-body p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="font-medium text-primary-content/80 text-sm uppercase tracking-wider">Total Spend</p>
-              <h2 className="mt-1 font-black text-4xl">${totalSpent.toFixed(2)}</h2>
-            </div>
-            <div className="text-right">
-              <div className={cn("badge border-none p-3 font-bold text-white", avgHealth > 70 ? "bg-success" : "bg-warning")}>{avgHealth}/100 Health</div>
-            </div>
+          <div>
+            <p className="font-medium text-primary-content/80 text-sm uppercase tracking-wider">Total Spend</p>
+            <h2 className="mt-1 font-black text-4xl">${totalSpent.toFixed(2)}</h2>
           </div>
         </div>
       </div>
@@ -93,7 +87,7 @@ export default async function HistoryPage() {
                     <div className="text-right">
                       <p className="font-black text-base-content">${receipt.total_spent?.toFixed(2)}</p>
                       <p className={cn("font-bold text-[10px]", (receipt.analysis?.health_score || 0) > 70 ? "text-success" : "text-warning")}>
-                        {receipt.analysis?.health_score} score
+                        {receipt.analysis?.health_score || 0} score
                       </p>
                     </div>
                   </div>

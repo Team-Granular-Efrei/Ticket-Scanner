@@ -11,6 +11,7 @@ const ItemSchema = z.object({
 });
 
 export const ReceiptSchema = z.object({
+  id: z.string().default(() => crypto.randomUUID()),
   merchant: z.object({
     name: z.string().describe("The name of the store/vendor"),
     // 🔥 ROBUST FIX: If AI hallucinates "Food", Zod auto-corrects to "Other"
@@ -55,7 +56,6 @@ export function getSystemPrompt() {
     - Line Items (Name, Price, Qty)
     
     ANALYZE:
-    - Assign a "health_score" (0-100) based on nutritional or financial responsibility.
     - Give "financial_advice": A single, punchy sentence.
 
     OUTPUT JSON ONLY matching this structure:
@@ -68,7 +68,7 @@ export function getSystemPrompt() {
         currency: "EUR",
         tax_amount: 0,
         items: [{ name: "string", price: 0, quantity: 1, tags: ["string"] }],
-        analysis: { health_score: 0, financial_advice: "string" },
+        analysis: { financial_advice: "string" },
       },
       null,
       2,
