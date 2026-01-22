@@ -33,6 +33,7 @@ export const ReceiptSchema = z.object({
   ),
 
   analysis: z.object({
+    health_score: z.number().min(0).max(100),
     financial_advice: z.string().describe("Brief, ruthless budget advice (max 1 sentence)"),
   }),
 });
