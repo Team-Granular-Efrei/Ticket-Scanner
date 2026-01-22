@@ -17,10 +17,7 @@ const quicksand = localFont({
 export default function RootLayout({ children }: Readonly<React.PropsWithChildren>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" />
-        {/* rest of your scripts go under */}
-      </head>
+      <head>{process.env.NODE_ENV === "development" && <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" />}</head>
 
       <body className={`${quicksand.variable} antialiased`}>
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
