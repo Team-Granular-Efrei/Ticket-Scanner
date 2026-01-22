@@ -4,6 +4,7 @@ import { LuArrowLeft, LuTag } from "react-icons/lu";
 import type { ReceiptData } from "@/lib/schema";
 import { cn } from "@/utils/tw";
 import { DeleteButton } from "./DeleteButton";
+import { EditButton } from "./EditButton";
 
 type ReceiptRecord = ReceiptData & { id: string | number; savedAt?: string };
 
@@ -48,6 +49,15 @@ export default async function ReceiptDetailPage({ params }: { params: Promise<{ 
           <h1 className="truncate font-black text-2xl tracking-tighter">Receipt</h1>
           <p className="truncate text-base-content/50 text-xs">ID {receipt.id}</p>
         </div>
+        <EditButton
+          receipt={{
+            id: String(receipt.id),
+            merchant: receipt.merchant,
+            date: receipt.date,
+            time: receipt.time,
+            total_spent: receipt.total_spent,
+          }}
+        />
         <DeleteButton id={String(receipt.id)} />
       </div>
 
