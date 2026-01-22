@@ -1,7 +1,10 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState } from "react";
-import { LuAlertCircle, LuCheckCircle, LuInfo, LuX } from "react-icons/lu";
+import { cva } from "class-variance-authority";
+import { useState } from "react";
+import { LuBadgeAlert, LuCircleCheckBig, LuInfo, LuX } from "react-icons/lu";
+import { createContext } from "@/utils/create-context";
+import { uuid } from "@/utils/functions";
 
 type ToastType = "success" | "error" | "info";
 
@@ -18,31 +21,41 @@ type ToastContextType = {
   info: (message: string) => void;
 };
 
-const ToastContext = createContext<ToastContextType | null>(null);
+const alertVariant = cva("alert slide-in-from-top-4 fade-in animate-in shadow-lg duration-300", {
+  variants: {
+    type: {
+      success: "alert-success",
+      error: "alert-error",
+      info: "alert-info",
+    },
+  },
+  defaultVariants: {
+    type: "info",
+  },
+});
 
-export function useToast() {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used within ToastProvider");
-  }
-  return context;
-}
+const icons = {
+  success: <LuCircleCheckBig className="size-5" />,
+  error: <LuBadgeAlert className="size-5" />,
+  info: <LuInfo className="size-5" />,
+};
+
+const [ToastContextProvider, useToast] = createContext<ToastContextType>();
+
+export { useToast };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const removeToast = useCallback((id: string) => {
+  const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
+  };
 
-  const addToast = useCallback(
-    (message: string, type: ToastType = "info") => {
-      const id = crypto.randomUUID();
-      setToasts((prev) => [...prev, { id, message, type }]);
-      setTimeout(() => removeToast(id), 3000);
-    },
-    [removeToast],
-  );
+  const addToast = (message: string, type: ToastType = "info") => {
+    const id = `toast_${uuid()}_${Date.now()}`;
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => removeToast(id), 3000);
+  };
 
   const value: ToastContextType = {
     toast: addToast,
@@ -51,32 +64,20 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     info: (message) => addToast(message, "info"),
   };
 
-  const icons = {
-    success: <LuCheckCircle className="h-5 w-5" />,
-    error: <LuAlertCircle className="h-5 w-5" />,
-    info: <LuInfo className="h-5 w-5" />,
-  };
-
-  const styles = {
-    success: "alert-success",
-    error: "alert-error",
-    info: "alert-info",
-  };
-
   return (
-    <ToastContext.Provider value={value}>
+    <ToastContextProvider value={value}>
       {children}
-      <div className="toast toast-top toast-center z-[100]">
+      <div className="toast toast-top toast-center z-100">
         {toasts.map((t) => (
-          <div key={t.id} className={`alert ${styles[t.type]} slide-in-from-top-4 fade-in animate-in shadow-lg duration-300`}>
+          <div key={t.id} className={alertVariant({ type: t.type })}>
             {icons[t.type]}
-            <span className="font-medium">{t.message}</span>
+            <span>{t.message}</span>
             <button type="button" onClick={() => removeToast(t.id)} className="btn btn-ghost btn-xs btn-circle">
-              <LuX className="h-4 w-4" />
+              <LuX className="size-4" />
             </button>
           </div>
         ))}
       </div>
-    </ToastContext.Provider>
+    </ToastContextProvider>
   );
 }

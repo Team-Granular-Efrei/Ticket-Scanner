@@ -8,6 +8,7 @@ import { RiArrowDownSFill, RiArrowLeftSFill, RiArrowRightSFill } from "react-ico
 import { deleteReceipt } from "@/app/actions/delete";
 import { type SaveState, saveReceipt } from "@/app/actions/save";
 import { BudgetCategory, type ReceiptData } from "@/lib/schema";
+import { useToast } from "@/providers/toast";
 import { uuid } from "@/utils/functions";
 
 export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: ReceiptData; isUpdate?: boolean; onSave?: (state: SaveState) => void }) {
@@ -16,6 +17,8 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
   const [items, setItems] = useState(initialData.items);
   const [feedback, setFeedback] = useState<SaveState | null>(null);
   const navigate = useRouter();
+  const success = useToast((ctx) => ctx.success);
+  const error = useToast((ctx) => ctx.error);
 
   const totalAmount = items.reduce((sum, item) => sum + item.price, 0);
 
@@ -91,6 +94,14 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
       setFeedback(result);
     });
   };
+
+  useEffect(() => {
+    if (feedback?.success) {
+      success(feedback.message);
+    } else if (feedback && !feedback.success) {
+      error(feedback.message);
+    }
+  }, [feedback, success, error]);
 
   useEffect(() => {
     if (feedback && onSave) {

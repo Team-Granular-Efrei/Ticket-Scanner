@@ -7,7 +7,7 @@ import OCRResult from "@/components/ocr-result";
 import OCRButton from "@/components/orc-button";
 import { ThemeProvider } from "@/providers/theme";
 import { ToastProvider } from "@/providers/toast";
-import { ReceiptProvider } from "./context/receipt";
+import { ReceiptProvider } from "../providers/receipt";
 
 export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME,
