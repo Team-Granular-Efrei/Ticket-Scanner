@@ -3,7 +3,7 @@
 import { startTransition, useActionState, useEffect } from "react";
 import { LuCamera, LuImages } from "react-icons/lu";
 import { type AnalysisState, analyzeReceipt } from "@/app/actions/analyze";
-import { useReceipt } from "@/app/context/receipt";
+import { useReceipt } from "@/providers/receipt";
 
 const initialState: AnalysisState = { status: "idle" };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { LuChevronLeft, LuSettings } from "react-icons/lu";
-import { useReceipt } from "@/app/context/receipt";
+import { useReceipt } from "@/providers/receipt";
 import { ReceiptEditor } from "./receipt-editor";
 
 export default function OCRResult() {
