@@ -13,6 +13,10 @@ C'est une application web pour **scanner vos tickets de caisse** et **gérer vos
 
 ## Installation et Lancement
 
+### Prérequis
+
+- **Node.js** version 18 ou supérieure
+
 ### Étapes
 
 ```bash
