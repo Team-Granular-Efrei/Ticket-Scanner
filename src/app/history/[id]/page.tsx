@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LuArrowLeft, LuTag } from "react-icons/lu";
 import type { ReceiptData } from "@/lib/schema";
 import { cn } from "@/utils/tw";
+import { DeleteButton } from "./DeleteButton";
 
 type ReceiptRecord = ReceiptData & { id: string | number; savedAt?: string };
 
@@ -43,10 +44,11 @@ export default async function ReceiptDetailPage({ params }: { params: Promise<{ 
         <Link href="/history" className="btn btn-circle btn-ghost btn-sm">
           <LuArrowLeft className="h-6 w-6" />
         </Link>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h1 className="truncate font-black text-2xl tracking-tighter">Receipt</h1>
           <p className="truncate text-base-content/50 text-xs">ID {receipt.id}</p>
         </div>
+        <DeleteButton id={String(receipt.id)} />
       </div>
 
       {/* Summary Card */}
