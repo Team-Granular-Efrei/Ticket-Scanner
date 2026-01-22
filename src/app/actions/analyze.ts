@@ -48,8 +48,6 @@ export async function analyzeReceipt(_prevState: AnalysisState, formData: FormDa
     // If Mistral hallucinates a field, this line throws a clear error
     const validatedData = ReceiptSchema.parse(rawJson);
 
-    console.log("Analysis Successful:", validatedData);
-
     // Fallback if AI didn't find a date on the receipt
     if (!validatedData.date) {
       validatedData.date = new Date().toISOString().split("T")[0]; // YYYY-MM-DD

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import localFont from "next/font/local";
+import Link from "next/link";
+import { LuChartPie } from "react-icons/lu";
+import OCRResult from "@/components/ocr-result";
+import OCRButton from "@/components/orc-button";
 import { ThemeProvider } from "@/providers/theme";
+import { ReceiptProvider } from "./context/receipt";
 
 export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME,
@@ -24,7 +29,65 @@ export default function RootLayout({ children }: Readonly<React.PropsWithChildre
 
       <body className={`${quicksand.variable} antialiased`}>
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
+          <ReceiptProvider>
+            {children}
+
+            <div id="my-drawer" className="drawer drawer-bottom drawer-animated drawer-modal h-[80dvh] rounded-t-2xl bg-base-100" popover="auto">
+              <div className="card w-full">
+                <div className="card-body">
+                  <h2 className="card-title text-center text-primary text-sm">Creating Transaction option</h2>
+                  <p className="-mt-2 text-center text-xs">Select an option to add a new transaction</p>
+
+                  <div className="link-box btn btn-accent btn-soft block h-auto p-2 text-start font-medium not-hover:text-base-content">
+                    <h3 className="font-semibold text-primary text-sm">
+                      <Link href="/receipt/new" className="link-overlay">
+                        Create a transaction
+                      </Link>
+                    </h3>
+                    <p className="text-xs">Create a new expense</p>
+                  </div>
+
+                  <div className="link-box btn btn-info btn-soft block h-auto p-2 text-start font-medium not-hover:text-base-content">
+                    <button type="button" className="link-overlay cursor-pointer" popoverTarget="my-drawer-2" popoverTargetAction="show">
+                      <h3 className="font-semibold text-primary text-sm">Create transaction from receipt</h3>
+                    </button>
+                    <p className="text-xs">Create a transaction from a selection of receipt images in the gallery.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="my-drawer-2" className="drawer drawer-bottom drawer-animated drawer-modal h-[80dvh] rounded-t-2xl bg-base-100" popover="auto">
+              <div className="card w-full">
+                <div className="card-body">
+                  <h2 className="card-title text-center text-primary text-sm">Select Image</h2>
+                  <p className="-mt-2 text-center text-xs">Please provide your image source.</p>
+                  <OCRButton />
+                </div>
+              </div>
+            </div>
+
+            <div id="my-drawer-3" className="drawer drawer-right drawer-animated drawer-modal w-dvw bg-base-100 backdrop:bg-[#0000]" popover="manual">
+              <div className="card size-full">
+                <div className="card-body min-h-dvh overflow-auto p-0">
+                  <OCRResult />
+                </div>
+              </div>
+            </div>
+
+            <div id="my-drawer-4" className="drawer drawer-bottom drawer-animated drawer-modal h-[80dvh] rounded-t-2xl bg-base-100" popover="auto">
+              <div className="card w-full">
+                <div className="card-body">
+                  <h2 className="card-title text-center text-primary text-sm">Analytics Dashboard</h2>
+                  <p className="-mt-2 text-center text-xs">View detailed analytics of your expenses and spending habits.</p>
+                  <Link href="/analytics" className="btn btn-soft btn-secondary w-full justify-between py-6">
+                    Analytics
+                    <LuChartPie className="icon size-5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </ReceiptProvider>
         </ThemeProvider>
       </body>
     </html>
