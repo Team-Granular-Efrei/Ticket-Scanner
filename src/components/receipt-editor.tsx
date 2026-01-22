@@ -74,8 +74,13 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
 
     // 2. Call Server Action
     startTransition(async () => {
-      const result = await saveReceipt(receiptData, isUpdate ? receiptData.id : undefined);
-      setFeedback(result);
+      if (isUpdate) {
+        const result = await saveReceipt(receiptData);
+        setFeedback(result);
+      } else {
+        const result = await saveReceipt(receiptData);
+        setFeedback(result);
+      }
     });
   };
 

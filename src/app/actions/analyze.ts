@@ -54,8 +54,7 @@ export async function analyzeReceipt(_prevState: AnalysisState, formData: FormDa
     }
 
     return { status: "success", data: validatedData };
-  } catch (error) {
-    console.error("Analysis Failed:", error);
+  } catch {
     return { status: "error", error: "Failed to analyze receipt. Please try again." };
   }
 }

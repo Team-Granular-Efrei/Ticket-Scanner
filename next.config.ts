@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import { validateEnv } from "./src/lib/env";
+
+validateEnv();
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -9,11 +12,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    remotePatterns: [
-      {
-        hostname: "**",
-      },
-    ],
+    remotePatterns: [],
   },
 };
 
