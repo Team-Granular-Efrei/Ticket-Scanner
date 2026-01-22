@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LuTrash2 } from "react-icons/lu";
 import { deleteReceipt } from "@/app/actions/save";
+import { useToast } from "@/providers/toast";
 
 export function DeleteButton({ id }: { id: string }) {
   const router = useRouter();
+  const { success, error } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -14,8 +16,10 @@ export function DeleteButton({ id }: { id: string }) {
     setIsDeleting(true);
     const result = await deleteReceipt(id);
     if (result.success) {
+      success("Receipt deleted successfully");
       router.push("/history");
     } else {
+      error(result.error || "Failed to delete receipt");
       setIsDeleting(false);
       setShowConfirm(false);
     }

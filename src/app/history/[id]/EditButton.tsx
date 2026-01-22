@@ -5,6 +5,7 @@ import { useState } from "react";
 import { LuPencil, LuX } from "react-icons/lu";
 import { updateReceipt } from "@/app/actions/save";
 import { BudgetCategory } from "@/lib/schema";
+import { useToast } from "@/providers/toast";
 
 type ReceiptEditData = {
   id: string;
@@ -18,6 +19,7 @@ const categories = BudgetCategory.options;
 
 export function EditButton({ receipt }: { receipt: ReceiptEditData }) {
   const router = useRouter();
+  const { success, error } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -41,8 +43,11 @@ export function EditButton({ receipt }: { receipt: ReceiptEditData }) {
     });
 
     if (result.success) {
+      success("Receipt updated successfully");
       setIsOpen(false);
       router.refresh();
+    } else {
+      error(result.error || "Failed to update receipt");
     }
     setIsSaving(false);
   }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/providers/theme";
+import { ToastProvider } from "@/providers/toast";
 
 export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME,
@@ -21,7 +22,7 @@ export default function RootLayout({ children }: Readonly<React.PropsWithChildre
 
       <body className={`${quicksand.variable} antialiased`}>
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
+          <ToastProvider>{children}</ToastProvider>
         </ThemeProvider>
       </body>
     </html>

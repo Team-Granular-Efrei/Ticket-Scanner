@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { startTransition, useActionState, useEffect, useId, useState } from "react";
+import { startTransition, useActionState, useCallback, useEffect, useId, useRef, useState } from "react";
 import { LuCalendar, LuCamera, LuRefreshCw, LuSave, LuStore, LuTag, LuWallet } from "react-icons/lu";
 import { type AnalysisState, analyzeReceipt } from "@/app/actions/analyze";
-import { BudgetCategory, type ReceiptData } from "@/lib/schema"; // Import new types
+import { BudgetCategory, type ReceiptData } from "@/lib/schema";
+import { useToast } from "@/providers/toast";
 import { cn } from "@/utils/tw";
 import { saveReceipt } from "./actions/save";
 
@@ -12,6 +13,7 @@ const initialState: AnalysisState = { status: "idle" };
 
 export default function Home() {
   const [state, formAction, isPending] = useActionState(analyzeReceipt, initialState);
+  const { success, error, info } = useToast();
 
   const id = useId();
   const ids = {
@@ -21,11 +23,12 @@ export default function Home() {
     categorySelect: `${id}-category-select`,
   };
 
-  // Local state for the "Editor" mode
   const [data, setData] = useState<ReceiptData | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  // New state for saving status
   const [isSaving, setIsSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Track if we've already processed the current state
+  const processedStateRef = useRef<string | null>(null);
 
   async function handleSave() {
     if (!data) {
@@ -33,38 +36,57 @@ export default function Home() {
     }
     setIsSaving(true);
 
-    // Call the Server Action
     const result = await saveReceipt(data);
 
     setIsSaving(false);
     if (result.success) {
-      alert("Saved to Wallet!"); // Replace with a nice Toast if you have one
-      setPreview(null);
-      setData(null);
+      success("Receipt saved to Wallet!");
+      resetScanner();
     } else {
-      alert(`Error saving: ${result.error}`);
+      error(result.error || "Failed to save receipt");
     }
   }
 
-  // When AI returns success, load it into the Editor
-  useEffect(() => {
-    if (state.status === "success" && state.data) {
-      setData(state.data);
+  const resetScanner = useCallback(() => {
+    setData(null);
+    processedStateRef.current = null;
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
-  }, [state.status, state.data]);
+  }, []);
+
+  // Handle state changes from analysis
+  useEffect(() => {
+    // Create a unique key for this state
+    const stateKey = state.status === "success" ? `success-${state.data?.id}` : state.status;
+
+    // Skip if we've already processed this state
+    if (processedStateRef.current === stateKey) {
+      return;
+    }
+
+    if (state.status === "success" && state.data) {
+      processedStateRef.current = stateKey;
+      setData(state.data);
+      success("Receipt analyzed successfully!");
+    } else if (state.status === "error") {
+      processedStateRef.current = stateKey;
+      error(state.error || "Analysis failed");
+      resetScanner();
+    }
+  }, [state, success, error, resetScanner]);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      setPreview(URL.createObjectURL(file));
+      info("Analyzing receipt...");
       const formData = new FormData();
       formData.append("file", file);
       startTransition(() => formAction(formData));
     }
   }
 
-  // Handle manual edits to the form
-  function updateField(section: keyof ReceiptData, value: any) {
+  function updateField(section: keyof ReceiptData, value: unknown) {
     if (!data) {
       return;
     }
@@ -77,6 +99,11 @@ export default function Home() {
     }
     setData({ ...data, merchant: { ...data.merchant, [key]: value } });
   }
+
+  // Show scanner when no data and not pending
+  const showScanner = !data && !isPending;
+  // Show editor when we have data and not pending
+  const showEditor = data && !isPending;
 
   return (
     <main className="relative flex min-h-screen flex-col items-center bg-base-100 p-4 pb-24">
@@ -95,10 +122,10 @@ export default function Home() {
       </div>
 
       {/* --- STATE 1: IDLE (Scanner) --- */}
-      {!preview && (
+      {showScanner && (
         <div className="fade-in flex flex-1 animate-in flex-col items-center justify-center gap-8">
           <label htmlFor={ids.fileInput} className={cn("btn btn-circle btn-xl group relative h-32 w-32 border-base-300 bg-base-200 shadow-2xl")}>
-            <input id={ids.fileInput} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" />
+            <input ref={fileInputRef} id={ids.fileInput} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" />
             <LuCamera className="h-12 w-12 text-primary transition-transform group-hover:scale-110" />
             <span className="absolute -bottom-8 font-bold text-base-content/40 text-sm uppercase tracking-widest">Scan Receipt</span>
           </label>
@@ -114,7 +141,7 @@ export default function Home() {
       )}
 
       {/* --- STATE 3: EDITOR (The Wallet UI) --- */}
-      {data && !isPending && (
+      {showEditor && (
         <div className="slide-in-from-bottom-8 w-full max-w-md animate-in space-y-6 duration-500">
           {/* 1. Merchant Card */}
           <div className="card w-full border border-base-300 bg-base-200 shadow-sm">
@@ -253,13 +280,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 4. Action Buttons (Updated) */}
+          {/* 4. Action Buttons */}
           <div className="grid grid-cols-2 gap-3 pt-4">
             <button
               type="button"
               onClick={() => {
-                setPreview(null);
-                setData(null);
+                info("Receipt discarded");
+                resetScanner();
               }}
               className="btn btn-outline border-base-300 hover:border-base-400 hover:bg-base-200"
               disabled={isSaving}
@@ -267,12 +294,7 @@ export default function Home() {
               <LuRefreshCw /> Discard
             </button>
 
-            <button
-              type="button"
-              onClick={handleSave} // <--- WIRED UP
-              disabled={isSaving}
-              className="btn btn-primary shadow-lg shadow-primary/20"
-            >
+            <button type="button" onClick={handleSave} disabled={isSaving} className="btn btn-primary shadow-lg shadow-primary/20">
               {isSaving ? <span className="loading loading-spinner loading-sm"></span> : <LuSave />}
               {isSaving ? "Saving..." : "Save to Wallet"}
             </button>
