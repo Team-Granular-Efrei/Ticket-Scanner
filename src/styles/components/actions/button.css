@@ -38,7 +38,7 @@
 
     &:focus-visible,
     &:has(:focus-visible) {
-      @apply isolate outline-2 outline-solid;
+      @apply isolate outline-2 outline-solid outline-offset-2;
       outline-color: var(--btn-color, currentcolor);
     }
 

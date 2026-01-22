@@ -82,17 +82,13 @@
     }
   }
 
-  &::-webkit-calendar-picker-indicator {
-    @apply absolute end-3;
-  }
-
-  &:has(> input[type="date"]) {
-    :where(input[type="date"]) {
-      @apply inline-flex appearance-none;
-    }
-
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      @apply absolute end-3 size-[1em] cursor-pointer;
+  &:has(> input[type="date"], > input[type="time"]) {
+    :where(input[type="date"], input[type="time"]) {
+      @apply inline-flex appearance-none relative;
+      &::-webkit-calendar-picker-indicator {
+        /* @apply absolute end-3 size-[1em] cursor-pointer; */
+        @apply absolute inset-0 cursor-pointer appearance-none opacity-0 size-full;
+      }
     }
   }
 }
