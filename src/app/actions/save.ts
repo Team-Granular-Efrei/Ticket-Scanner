@@ -19,8 +19,7 @@ export async function saveReceipt(data: ReceiptData) {
     }
 
     return { success: true };
-  } catch (error) {
-    console.error("Save Error:", error);
+  } catch {
     return { success: false, error: "Could not save receipt." };
   }
 }
