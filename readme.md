@@ -11,6 +11,13 @@ C'est une application web pour **scanner vos tickets de caisse** et **gérer vos
 - **Sauvegarder** dans votre portefeuille
 - **Visualiser votre historique** et vos statistiques de dépenses
 
+## Prérequis
+
+- **Node.js** : `20.19.0` (version exacte requise)
+- **pnpm** : `10.14.0`
+
+> Utilisez [nvm](https://github.com/nvm-sh/nvm) pour gérer vos versions de Node.js : `nvm use`
+
 ## Installation et Lancement
 
 ### Étapes
@@ -18,6 +25,7 @@ C'est une application web pour **scanner vos tickets de caisse** et **gérer vos
 ```bash
 git clone https://github.com/Team-Granular-Efrei/Ticket-Scanner.git
 cd Ticket-Scanner
+nvm use  # Pour utiliser la version Node.js du projet
 npm install
 
 # Créer un fichier .env.local et configurer :
