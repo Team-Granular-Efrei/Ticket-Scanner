@@ -20,19 +20,25 @@ export async function analyzeReceipt(_prevState: AnalysisState, formData: FormDa
   }
 
   try {
+    console.log("[analyze] Starting analysis for file:", file.name, file.type, file.size);
+
     // 1. Prepare Image for Mistral
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const base64Image = `data:${file.type};base64,${buffer.toString("base64")}`;
+    console.log("[analyze] Image converted to base64");
 
     // 2. Mistral OCR
+    console.log("[analyze] Calling Mistral OCR...");
     const ocrResponse = await client.ocr.process({
       model: "mistral-ocr-latest",
       document: { type: "image_url", imageUrl: base64Image },
     });
     const rawText = ocrResponse.pages.map((p) => p.markdown).join("\n");
+    console.log("[analyze] OCR result:", rawText.slice(0, 200));
 
     // 3. Mistral Analysis with the Schema-Driven Prompt
+    console.log("[analyze] Calling Mistral chat...");
     const analysisResponse = await client.chat.complete({
       model: "mistral-small-latest",
       messages: [
@@ -42,11 +48,20 @@ export async function analyzeReceipt(_prevState: AnalysisState, formData: FormDa
       responseFormat: { type: "json_object" },
     });
 
-    const rawJson = JSON.parse(analysisResponse.choices[0].message.content as string);
+    const content = analysisResponse.choices?.[0]?.message?.content;
+    console.log("[analyze] Chat response:", content?.slice(0, 200));
+
+    if (!content) {
+      return { status: "error", error: "No response from AI" };
+    }
+
+    const rawJson = JSON.parse(content);
+    console.log("[analyze] Parsed JSON:", Object.keys(rawJson));
 
     // VALIDATE with Zod (The Safety Net)
     // If Mistral hallucinates a field, this line throws a clear error
     const validatedData = ReceiptSchema.parse(rawJson);
+    console.log("[analyze] Validation passed");
 
     // Fallback if AI didn't find a date on the receipt
     if (!validatedData.date) {
@@ -55,7 +70,8 @@ export async function analyzeReceipt(_prevState: AnalysisState, formData: FormDa
 
     return { status: "success", data: validatedData };
   } catch (err) {
-    console.error("Analysis error:", err);
-    return { status: "error", error: "Failed to analyze receipt. Please try again." };
+    console.error("[analyze] Error:", err);
+    const message = err instanceof Error ? err.message : "Failed to analyze receipt";
+    return { status: "error", error: message };
   }
 }

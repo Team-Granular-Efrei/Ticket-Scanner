@@ -149,11 +149,20 @@ export default function Home() {
       {/* --- STATE 1: IDLE (Scanner) --- */}
       {showScanner && (
         <div className="fade-in flex flex-1 animate-in flex-col items-center justify-center gap-8">
-          <label htmlFor={ids.fileInput} className={cn("btn btn-circle btn-xl group relative h-32 w-32 border-base-300 bg-base-200 shadow-2xl")}>
-            <input ref={fileInputRef} id={ids.fileInput} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" />
+          <input ref={fileInputRef} id={ids.fileInput} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" />
+          <button
+            type="button"
+            onClick={() => {
+              if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+                fileInputRef.current.click();
+              }
+            }}
+            className={cn("btn btn-circle btn-xl group relative h-32 w-32 border-base-300 bg-base-200 shadow-2xl")}
+          >
             <LuCamera className="h-12 w-12 text-primary transition-transform group-hover:scale-110" />
             <span className="absolute -bottom-8 font-bold text-base-content/40 text-sm uppercase tracking-widest">Scan Receipt</span>
-          </label>
+          </button>
         </div>
       )}
 
