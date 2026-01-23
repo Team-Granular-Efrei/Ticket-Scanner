@@ -67,17 +67,19 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContextProvider value={value}>
       {children}
-      <div className="toast toast-top toast-center z-100">
-        {toasts.map((t) => (
-          <div key={t.id} className={alertVariant({ type: t.type })}>
+      {/* <div className="z-100"> */}
+      {toasts.map((t) => (
+        <div key={t.id} className="dialog-modal dialog dialog-top">
+          <div className={alertVariant({ type: t.type })}>
             {icons[t.type]}
             <span>{t.message}</span>
             <button type="button" onClick={() => removeToast(t.id)} className="btn btn-ghost btn-xs btn-circle">
               <LuX className="size-4" />
             </button>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+      {/* </div> */}
     </ToastContextProvider>
   );
 }

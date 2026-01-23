@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import localFont from "next/font/local";
 import Link from "next/link";
 import { LuChartPie } from "react-icons/lu";
+import NewReceiptButton from "@/components/new-receipt-button";
 import OCRResult from "@/components/ocr-result";
 import OCRButton from "@/components/orc-button";
 import { ThemeProvider } from "@/providers/theme";
@@ -39,11 +40,11 @@ export default function RootLayout({ children }: Readonly<React.PropsWithChildre
 
                     <div className="link-box btn btn-accent btn-soft block h-auto p-2 text-start font-medium not-hover:text-base-content">
                       <h3 className="font-semibold text-primary text-sm">
-                        <Link href="/receipt/new" className="link-overlay">
+                        <NewReceiptButton type="button" className="link-overlay cursor-pointer" popoverTarget="my-drawer-3" popoverTargetAction="show">
                           Create a transaction
-                        </Link>
+                        </NewReceiptButton>
                       </h3>
-                      <p className="text-xs">Create a new expense</p>
+                      <p className="text-xs">Create a new expense.</p>
                     </div>
 
                     <div className="link-box btn btn-info btn-soft block h-auto p-2 text-start font-medium not-hover:text-base-content">

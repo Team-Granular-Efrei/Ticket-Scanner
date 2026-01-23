@@ -76,9 +76,9 @@ export async function updateReceipt(id: string, data: Partial<ReceiptData>) {
 
     // Refresh data
     revalidatePath("/");
-    return { success: true };
+    return { success: true, message: "Receipt updated successfully!" };
   } catch (error) {
     console.error("Save Error:", error);
-    return { success: false, error: "Could not update receipt." };
+    return { success: false, message: "Could not update receipt." };
   }
 }
