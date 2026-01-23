@@ -5,21 +5,63 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { LuBadgeInfo, LuChartPie, LuCheck, LuCopy, LuPlus, LuReceipt, LuSave, LuTag, LuTags, LuTrash2, LuX } from "react-icons/lu";
 import { RiArrowDownSFill, RiArrowLeftSFill, RiArrowRightSFill } from "react-icons/ri";
-import { deleteReceipt, type SaveState, saveReceipt } from "@/app/actions/save";
+import { deleteReceipt, type SaveState, saveReceipt, updateReceipt } from "@/app/actions/save";
 import { BudgetCategory, type ReceiptData } from "@/lib/schema";
 import { useToast } from "@/providers/toast";
 import { uuid } from "@/utils/functions";
+import { cn } from "@/utils/tw";
 
 export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: ReceiptData; isUpdate?: boolean; onSave?: (state: SaveState) => void }) {
   // const [state, formAction, isPending] = useActionState(saveReceipt, initialState);
   const [isPending, startTransition] = useTransition();
-  const [items, setItems] = useState(initialData.items);
+  const [items, setItems] = useState<(ReceiptData["items"][0] & { discount?: number; enableDiscount?: boolean })[]>(initialData.items);
   const [feedback, setFeedback] = useState<SaveState | null>(null);
   const navigate = useRouter();
   const success = useToast((ctx) => ctx.success);
   const error = useToast((ctx) => ctx.error);
+  const [snapshot, setSnapshot] = useState<ReceiptData>(initialData);
+  const [enableDiscount, setEnableDiscount] = useState<boolean>(false);
 
-  const totalAmount = items.reduce((sum, item) => sum + item.price, 0);
+  const takeSnapshot = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const form = event.currentTarget.closest("form");
+    if (form) {
+      const formData = new FormData(form);
+
+      const receiptData: ReceiptData = {
+        currency: initialData.currency,
+        date: formData.get("date") as string,
+        discount: Number(formData.get("discount") as string),
+        id: initialData.id,
+        items: items.map(
+          (item) =>
+            ({
+              id: item.id,
+              category: BudgetCategory.parse(formData.get(`item_${item.id}_category`) as string),
+              name: formData.get(`item_${item.id}_name`) as string,
+              price: Number(formData.get(`item_${item.id}_total_amount`) as string),
+              quantity: Number(formData.get(`item_${item.id}_quantity`) as string),
+            }) as ReceiptData["items"][0],
+        ),
+        tax_amount: Number(formData.get("tax_amount") as string),
+        time: formData.get("time") as string,
+        total_spent: initialData.total_spent,
+        service_charge: Number(formData.get("service_charge") as string),
+        merchant: {
+          address: initialData.merchant.address,
+          name: initialData.merchant.name,
+          type: initialData.merchant.type,
+        },
+        analysis: {
+          insight: initialData.analysis.insight,
+        },
+        note: formData.get("receipt-details") as string,
+      };
+
+      receiptData.total_spent = receiptData.items.reduce((sum, item) => sum + item.price, 0);
+
+      setSnapshot(receiptData);
+    }
+  };
 
   const addItem = () => {
     setItems([
@@ -42,45 +84,13 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
     e.preventDefault();
     setFeedback(null);
 
-    const formData = new FormData(e.currentTarget);
-
-    const receiptData: ReceiptData = {
-      currency: initialData.currency,
-      date: formData.get("date") as string,
-      discount: Number(formData.get("discount") as string),
-      id: initialData.id,
-      items: items.map(
-        (item) =>
-          ({
-            id: item.id.startsWith("generated_") ? undefined : item.id, // ID will be generated server-side if new
-            category: BudgetCategory.parse(formData.get(`item_${item.id}_category`) as string),
-            name: formData.get(`item_${item.id}_name`) as string,
-            price: Number(formData.get(`item_${item.id}_price`) as string),
-            quantity: Number(formData.get(`item_${item.id}_quantity`) as string),
-          }) as ReceiptData["items"][0],
-      ),
-      tax_amount: Number(formData.get("tax_amount") as string),
-      time: formData.get("time") as string,
-      total_spent: totalAmount,
-      service_charge: Number(formData.get("service_charge") as string),
-      merchant: {
-        address: initialData.merchant.address,
-        name: initialData.merchant.name,
-        type: initialData.merchant.type,
-      },
-      analysis: {
-        insight: initialData.analysis.insight,
-      },
-      note: formData.get("receipt-details") as string,
-    };
-
     // 2. Call Server Action
     startTransition(async () => {
       if (isUpdate) {
-        const result = await saveReceipt(receiptData);
+        const result = await updateReceipt(snapshot.id, snapshot);
         setFeedback(result);
       } else {
-        const result = await saveReceipt(receiptData);
+        const result = await saveReceipt(snapshot);
         setFeedback(result);
       }
     });
@@ -114,7 +124,6 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
     <>
       <form onSubmit={handleSubmit} className="relative min-h-dvh pb-32">
         {/* Hidden ID if updating */}
-        <input type="hidden" name="id" value={initialData.id} />
         <input type="hidden" name="currency" value={initialData.currency} />
 
         {/* BASIC INFORMATION */}
@@ -141,20 +150,17 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
         {/* ITEMS DETAIL */}
         {items.map((item, idx) => {
           return (
-            <div key={item.id} className="mt-2 flex w-full flex-col bg-base-200 p-4 pb-2">
+            <div key={item.id} id={item.id} className="mt-2 flex w-full flex-col bg-base-200 p-4 pb-2">
               {/* ACTION ON RECEIPT ITEM */}
               <div className="flex items-center gap-2">
                 <span className="font-bold">{idx + 1})</span>
                 {/* CATEGORY SELECTOR */}
-                <div className="btn btn-soft grow justify-between p-1">
+                <div className="btn btn-soft grow p-1 outline-[#0000]">
                   <span className="flex size-8 items-center justify-center rounded-lg bg-base-200">🍔</span>
-                  <span className="font-bold text-sm">{item.category}</span>
-                  <RiArrowDownSFill className="icon size-5" />
-                  {/* Invisible Select overlay */}
                   <select
                     id={`item_${item.id}_category`}
                     name={`item_${item.id}_category`}
-                    className="absolute inset-0 size-full cursor-[inherit] opacity-0"
+                    className="grow cursor-pointer text-center"
                     defaultValue={item.category}
                   >
                     {BudgetCategory.options.map((c) => (
@@ -184,6 +190,7 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
                     id={`item_${item.id}_quantity`}
                     name={`item_${item.id}_quantity`}
                     type="number"
+                    step={1}
                     defaultValue={item.quantity}
                     placeholder="..."
                     className="input input-soft input-base-content min-w-0 text-center"
@@ -210,25 +217,58 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
                     id={`item_${item.id}_price`}
                     name={`item_${item.id}_price`}
                     type="number"
-                    defaultValue={item.price.toFixed(2)}
+                    step="any"
+                    value={item.price.toFixed(2)}
                     placeholder="0"
                     className="input input-soft input-base-content text-right"
+                    onChange={(event) => {
+                      const value = Number(event.currentTarget.value) || 0;
+                      setItems((prevItems) => prevItems.map((i) => (i.id === item.id ? { ...i, price: value } : i)));
+                    }}
                   />
                 </div>
               </div>
 
               {/* DISCOUNT & TOTAL */}
               {/* We must redistribute the discount among items (if they are concerned) proportionally. */}
-              <div className="mt-1 flex items-center justify-between">
-                <span className="badge badge-soft badge-xs badge-error bg-error/20 px-1 py-3">
-                  <input type="checkbox" className="toggle toggle-soft toggle-xs toggle-error" />
-                  Discount : {initialData.discount ? (initialData.discount / initialData.items.length).toFixed(2) : "0.00"}
+              <div className="mt-1 flex items-center" data-part="item-discount-total">
+                <span className={cn("badge badge-soft badge-xs badge-error bg-error/20 px-1 py-3", enableDiscount ? "opacity-100" : "opacity-0")}>
+                  <input
+                    type="checkbox"
+                    name="item_discount_toggle"
+                    data-item-id={item.id}
+                    className="toggle toggle-soft toggle-xs toggle-error"
+                    checked={item.enableDiscount || false}
+                    onChange={(event) => {
+                      const isChecked = event.currentTarget.checked;
+                      setItems((prevItems) =>
+                        prevItems.map((i) => {
+                          const enableDiscountOnItem = i.id === item.id ? isChecked : i.enableDiscount;
+                          const totalItemsWithDiscount = prevItems.filter((it) => (it.id === item.id ? isChecked : it.enableDiscount)).length;
+                          if (enableDiscountOnItem) {
+                            const newDiscount = initialData.discount / totalItemsWithDiscount;
+                            return { ...i, enableDiscount: enableDiscountOnItem, discount: newDiscount };
+                          }
+                          return { ...i, enableDiscount: enableDiscountOnItem };
+                        }),
+                      );
+                    }}
+                  />
+                  <output>Discount : {(item.enableDiscount ? item.discount || 0 : 0).toFixed(2)}</output>
                 </span>
                 {/* The item total after discount: */}
-                <dl className="stat flex-row p-0 *:text-xs">
+                <dl className="stat ml-auto flex-row gap-0 p-0 *:text-xs">
                   <dt className="stat-title">Total :</dt>
                   <dd className="stat-value">
-                    {item.price.toFixed(2)} {initialData.currency}
+                    <input
+                      id={`item_${item.id}_total_amount`}
+                      name={`item_${item.id}_total_amount`}
+                      type="text"
+                      className="w-7 appearance-none text-center"
+                      readOnly
+                      value={`${(item.price - (item.enableDiscount ? item.discount || 0 : 0)).toFixed(2)}`}
+                    />
+                    {initialData.currency}
                   </dd>
                 </dl>
               </div>
@@ -247,11 +287,7 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
         <div className="mt-2 flex w-full flex-col bg-base-200 p-4 pb-0">
           <div className="collapse">
             {/* Should be checked by default if the AI find a VAT or a discount on the receipt. */}
-            <input
-              type="checkbox"
-              defaultChecked={!!(initialData.tax_amount && initialData.discount && (initialData.tax_amount > 0 || initialData.discount > 0))}
-              className="toggle toggle-soft toggle-success absolute top-0 right-0 col-start-auto row-start-auto mt-2 opacity-100"
-            />
+            <input type="checkbox" className="toggle toggle-soft toggle-success absolute top-0 right-0 col-start-auto row-start-auto mt-2 opacity-100" />
             <div className="collapse-title cursor-default p-0">
               <div className="flex w-full items-start gap-2">
                 <span className="badge badge-soft badge-info mt-2 size-10 rounded-full bg-info/20">
@@ -287,6 +323,7 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
                   id="vat-amount"
                   name="tax_amount"
                   type="number"
+                  step="any"
                   placeholder="0"
                   defaultValue={initialData.tax_amount}
                   className="input input-soft input-base-content w-23 text-right"
@@ -303,12 +340,48 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
                   id="discount-amount"
                   name="discount"
                   type="number"
+                  step="any"
                   placeholder="0"
                   defaultValue={initialData.discount}
                   className="input input-soft input-base-content w-23 text-right"
+                  onChange={(event) => {
+                    const value = Number(event.currentTarget.value);
+                    const receiptToggleDiscount = event.currentTarget
+                      .closest("form")
+                      ?.querySelector<HTMLInputElement>('input[type="checkbox"][name="receipt_discount_toggle"]');
+                    if (receiptToggleDiscount?.checked) {
+                      const totalItemsWithDiscount = items.filter((i) => i.enableDiscount).length;
+                      setItems((prevItems) => {
+                        const newItems = prevItems.map((i) => {
+                          if (totalItemsWithDiscount === 0) {
+                            return { ...i, discount: value / prevItems.length };
+                          }
+                          if (i.enableDiscount) {
+                            return { ...i, discount: value / totalItemsWithDiscount };
+                          }
+                          return i;
+                        });
+
+                        return newItems;
+                      });
+                    }
+                  }}
                 />
                 <div className="flex w-full items-center gap-2">
-                  <input type="checkbox" className="toggle toggle-soft toggle-sm toggle-error" />
+                  <input
+                    type="checkbox"
+                    name="receipt_discount_toggle"
+                    className="toggle toggle-soft toggle-sm toggle-error!"
+                    onChange={(event) => {
+                      const isChecked = event.currentTarget.checked;
+                      setEnableDiscount(isChecked);
+                      setItems((prevItems) => {
+                        return prevItems.map((i) => {
+                          return { ...i, enableDiscount: isChecked, discount: isChecked ? i.discount : 0 };
+                        });
+                      });
+                    }}
+                  />
                   <p className="text-xs">Distribute this portion to each transaction in proportion.</p>
                 </div>
               </div>
@@ -341,7 +414,7 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
 
         {/* FLOATING SAVE */}
         <div className="sticky bottom-8 z-20 flex justify-center">
-          <button type="button" className="btn btn-success" popoverTarget="my-drawer-5" popoverTargetAction="show">
+          <button type="button" className="btn btn-success" popoverTarget="my-drawer-5" popoverTargetAction="show" onClick={takeSnapshot}>
             <LuSave className="icon size-5" />
             Save
           </button>
@@ -357,7 +430,7 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
                 <div>
                   <span className="font-semibold text-sm">My transactions</span>
                   <p className="text-xs opacity-60">
-                    {items.length} {items.length === 1 ? "item" : "items"}
+                    {snapshot.items.length} {snapshot.items.length === 1 ? "item" : "items"}
                   </p>
                 </div>
                 <button
@@ -371,7 +444,7 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
               </div>
 
               <div className="grow space-y-2 overflow-auto p-1">
-                {items.map((item) => {
+                {snapshot.items.map((item) => {
                   return (
                     <div key={item.id} className="flex flex-wrap items-center gap-2 rounded-md p-2 shadow-sm">
                       <span className="badge badge-soft badge-info size-8 rounded-ld bg-info/20">
@@ -401,12 +474,12 @@ export function ReceiptEditor({ initialData, isUpdate, onSave }: { initialData: 
                 <div>
                   <span className="font-semibold text-sm">Total</span>
                   <p className="text-xs opacity-60">
-                    {items.length} {items.length === 1 ? "item" : "items"}
+                    {snapshot.items.length} {snapshot.items.length === 1 ? "item" : "items"}
                   </p>
                 </div>
                 <dl className="stat badge badge-soft badge-xs ml-auto flex-row items-center gap-0.5 rounded-2xl rounded-ld px-1 py-2.5 text-error">
                   <RiArrowDownSFill className="icon size-4" />
-                  <dd className="stat-value text-sm">{items.reduce((acc, item) => acc + item.price, 0).toFixed(2)}</dd>
+                  <dd className="stat-value text-sm">{snapshot.items.reduce((acc, item) => acc + item.price, 0).toFixed(2)}</dd>
                   <span className="ml-0.5 text-xs">{initialData.currency}</span>
                 </dl>
               </div>

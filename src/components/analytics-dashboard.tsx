@@ -24,6 +24,10 @@ const COLORS = {
 export function AnalyticsDashboard({ receipts }: { receipts: (ReceiptData & { savedAt: string })[] }) {
   const [activeTab, setActiveTab] = useState<"overview" | "breakdown">("overview");
 
+  // Determine the currency to display (fallback to EUR if no receipts)
+  // We take the currency from the most recent receipt (first in the array usually)
+  const currency = receipts.length > 0 ? receipts[0].currency : "EUR";
+
   // 1. Transform Data for "Category Breakdown" (Donut Chart)
   const categoryData = useMemo(() => {
     const map = new Map<string, number>();
@@ -97,7 +101,12 @@ export function AnalyticsDashboard({ receipts }: { receipts: (ReceiptData & { sa
                       cursor={{ fill: "transparent" }}
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
-                          return <div className="rounded-lg bg-base-100 p-2 font-bold text-xs shadow-xl">${Number(payload[0].value).toFixed(2)}</div>;
+                          return (
+                            // Display dynamic currency in Tooltip
+                            <div className="rounded-lg bg-base-100 p-2 font-bold text-xs shadow-xl">
+                              {Number(payload[0].value).toFixed(2)} {currency}
+                            </div>
+                          );
                         }
                         return null;
                       }}
@@ -114,7 +123,10 @@ export function AnalyticsDashboard({ receipts }: { receipts: (ReceiptData & { sa
             <div className="card grow bg-base-200 shadow-sm">
               <div className="card-body p-4">
                 <p className="font-bold text-base-content/50 text-xs uppercase">Avg. Ticket</p>
-                <p className="font-bold text-2xl">${receipts.length ? (totalSpent / receipts.length).toFixed(0) : 0}</p>
+                <p className="font-bold text-2xl">
+                  {/* Display dynamic currency */}
+                  {receipts.length ? (totalSpent / receipts.length).toFixed(0) : 0} {currency}
+                </p>
               </div>
             </div>
             <div className="card grow bg-base-200 shadow-sm">
@@ -143,7 +155,10 @@ export function AnalyticsDashboard({ receipts }: { receipts: (ReceiptData & { sa
               {/* Center Text */}
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-bold text-2xs text-base-content/50 uppercase">Total</span>
-                <span className="font-black text-xl">${totalSpent.toFixed(0)}</span>
+                {/* Display dynamic currency */}
+                <span className="font-black text-xl">
+                  {totalSpent.toFixed(0)} {currency}
+                </span>
               </div>
             </div>
 
@@ -155,7 +170,10 @@ export function AnalyticsDashboard({ receipts }: { receipts: (ReceiptData & { sa
                     <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[item.name as keyof typeof COLORS] || COLORS.Other }}></span>
                     <span className="font-bold text-base-content/80">{item.name}</span>
                   </div>
-                  <span className="font-mono text-base-content/50">${item.value.toFixed(0)}</span>
+                  {/* Display dynamic currency */}
+                  <span className="font-mono text-base-content/50">
+                    {item.value.toFixed(0)} {currency}
+                  </span>
                 </div>
               ))}
             </div>
