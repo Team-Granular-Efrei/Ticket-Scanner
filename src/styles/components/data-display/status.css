@@ -1,0 +1,17 @@
+@utility status-* {
+  @layer components.l1.l2 {
+    @apply color-contrast-(--status-color);
+    --status-color: --value(--color-*, [*]);
+    --status-fg: var(--color-contrast);
+  }
+}
+
+@utility status {
+  @layer components.l1.l2.l3 {
+    @apply rounded-full inline-block aspect-square size-2 align-middle bg-center bg-no-repeat;
+    color: var(--status-fg, color-mix(in oklab, var(--color-black) 30%, #0000));
+    background-color: var(--status-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+    background-image: radial-gradient(circle at 35% 30%, oklch(1 0 0 / calc(var(--depth) * 0.5)), #0000);
+    box-shadow: 0 2px 3px -1px color-mix(in oklab, currentColor calc(var(--depth) * 100%), #0000);
+  }
+}

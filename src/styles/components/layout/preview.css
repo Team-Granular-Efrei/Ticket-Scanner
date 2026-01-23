@@ -1,0 +1,15 @@
+@utility preview {
+  @layer components.l1.l2.l3 {
+    @apply color-contrast-(--color-bg,var(--color-base-100));
+    --preview-bg: color-mix(in oklab, var(--color-contrast, var(--color-base-content)) 4%, #0000);
+    box-shadow: 0 0 0 1px var(--color-bg, var(--color-base-100)) inset;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-bg, var(--color-base-100)),
+      var(--color-bg, var(--color-base-100)) 13px,
+      var(--preview-bg) 13px,
+      var(--preview-bg) 14px
+    );
+    background-size: 40px 40px;
+  }
+}

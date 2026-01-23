@@ -1,0 +1,16 @@
+@utility stat {
+  @apply flex flex-col gap-1 relative px-6 py-4 rounded-md w-fit;
+}
+
+@utility stat-title {
+  @apply inline-flex items-center gap-1.5 text-xs text-base-content/60;
+}
+
+@utility stat-value {
+  @apply align-baseline font-extrabold text-2xl tracking-tight proportional-nums;
+}
+
+@utility stat-desc {
+  @apply text-base-content/60 text-xs;
+  font-size: 0.75rem;
+}

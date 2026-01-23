@@ -1,0 +1,117 @@
+@utility card {
+  @layer components.l1.l2.l3 {
+    @apply flex flex-col relative rounded-md overflow-hidden w-fit;
+
+    figure {
+      @apply flex items-center justify-center;
+    }
+  }
+}
+
+@utility card-body {
+  @layer components.l1.l2.l3 {
+    @apply flex flex-auto flex-col gap-2 p-(--card-p);
+    padding: var(--card-p, 1.5rem);
+    font-size: var(--card-fontsize, 0.875rem);
+    line-height: var(--tw-leading, 1.25rem);
+
+    :where(p) {
+      @apply grow;
+    }
+  }
+}
+
+@utility card-overlay {
+  @layer components.l1.l2.l3 {
+    @apply absolute inset-0;
+  }
+}
+
+@utility card-title {
+  @layer components.l1.l2.l3 {
+    @apply font-bold;
+    font-size: var(--cardtitle-fontsize, 1.125rem);
+    line-height: var(--tw-leading, 1.75rem);
+  }
+}
+
+@utility card-action {
+  @layer components.l1.l2.l3 {
+    @apply flex flex-wrap items-start gap-2 text-xl;
+  }
+}
+
+@utility card-xs {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 0.5rem;
+      --card-fontsize: 0.6875rem;
+      --tw-leading: 0.75rem;
+    }
+
+    .card-title {
+      --cardtitle-fontsize: 0.875rem;
+      --tw-leading: 1.25rem;
+    }
+  }
+}
+
+@utility card-sm {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 1rem;
+      --card-fontsize: 0.75rem;
+      --tw-leading: 1rem;
+    }
+
+    .card-title {
+      --cardtitle-fontsize: 1rem;
+      --tw-leading: 1.5rem;
+    }
+  }
+}
+
+@utility card-md {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 1.5rem;
+      --card-fontsize: 0.875rem;
+      --tw-leading: 1.25rem;
+    }
+
+    .card-title {
+      --cardtitle-fontsize: 1.125rem;
+      --tw-leading: 1.75rem;
+    }
+  }
+}
+
+@utility card-lg {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 2rem;
+      --card-fontsize: 1rem;
+      --tw-leading: 1.5rem;
+    }
+
+    .card-title {
+      --cardtitle-fontsize: 1.25rem;
+      --tw-leading: 1.875rem;
+    }
+  }
+}
+
+@utility card-xl {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 2.5rem;
+      --card-fontsize: 1.125rem;
+      --tw-leading: 1.75rem;
+    }
+
+    .card-title {
+      --cardtitle-fontsize: 1.375rem;
+      --tw-leading: 1.875rem;
+    }
+  }
+}

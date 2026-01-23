@@ -1,0 +1,81 @@
+@utility badge {
+  @layer components.l1.l2.l3 {
+    --badge-bg: var(--badge-color, var(--color-base-200));
+    --badge-fg: var(--color-base-content);
+    --badge-border: color-mix(in oklab, var(--badge-bg), #000 calc(var(--depth) * 5%));
+    --badge-size: calc(var(--spacing, 0.25rem) * 6);
+    --badge-fontsize: 0.875rem;
+    --badge-noise: var(--fx-noise);
+    @apply inline-flex items-center justify-center gap-1 align-middle h-(--badge-size) w-fit rounded-lg font-semibold;
+    font-size: var(--badge-fontsize);
+    color: var(--badge-fg);
+    background-color: var(--badge-bg);
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--badge-noise);
+    padding-inline: calc(var(--badge-size) / 2 - var(--border));
+    border-width: var(--border);
+    border-style: solid;
+    border-color: var(--badge-border);
+  }
+}
+
+@utility badge-* {
+  @layer components.l1.l2.l3 {
+    --badge-color: --value(--color-*, [*]);
+    --badge-fg: var(--color-contrast);
+    @apply color-contrast-(--badge-color);
+  }
+}
+
+@utility badge-outline {
+  @layer components.l1.l2 {
+    --badge-bg: #0000;
+    --badge-fg: var(--badge-color);
+    --badge-border: var(--badge-color);
+    --badge-noise: none;
+  }
+}
+
+@utility badge-soft {
+  @layer components.l1.l2 {
+    --badge-fg: var(--badge-color, var(--color-base-content));
+    --badge-bg: color-mix(in oklab, var(--badge-color, var(--color-base-content)) 8%, var(--color-base-100));
+    --badge-border: color-mix(in oklab, var(--badge-color, var(--color-base-content)) 10%, var(--color-base-100));
+    --badge-noise: none;
+  }
+}
+
+@utility badge-xs {
+  @layer components.l1.l2.l3 {
+    --badge-fontsize: 0.625rem;
+    --badge-size: calc(var(--spacing, 0.25rem) * 4);
+  }
+}
+
+@utility badge-sm {
+  @layer components.l1.l2.l3 {
+    --badge-fontsize: 0.75rem;
+    --badge-size: calc(var(--spacing, 0.25rem) * 5);
+  }
+}
+
+@utility badge-md {
+  @layer components.l1.l2.l3 {
+    --badge-fontsize: 0.875rem;
+    --badge-size: calc(var(--spacing, 0.25rem) * 6);
+  }
+}
+
+@utility badge-lg {
+  @layer components.l1.l2.l3 {
+    --badge-fontsize: 1rem;
+    --badge-size: calc(var(--spacing, 0.25rem) * 7);
+  }
+}
+
+@utility badge-xl {
+  @layer components.l1.l2.l3 {
+    --badge-fontsize: 1.125rem;
+    --badge-size: calc(var(--spacing, 0.25rem) * 8);
+  }
+}

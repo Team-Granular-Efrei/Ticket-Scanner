@@ -1,0 +1,360 @@
+@theme default {
+  --*: initial;
+  /* Fonts */
+  --font-sans: var(--font-quicksand);
+
+  /* Colors */
+  --color-gray-50: oklch(0.99 0 0);
+  --color-gray-100: oklch(0.97 0.0013 286.38);
+  --color-gray-200: oklch(0.92 0.004 286.32);
+  --color-gray-300: oklch(0.87 0.0055 286.29);
+  --color-gray-400: oklch(0.71 0.0129 286.07);
+  --color-gray-500: oklch(0.55 0.0138 285.94);
+  --color-gray-600: oklch(0.44 0.0146 285.79);
+  --color-gray-700: oklch(0.37 0.0119 285.81);
+  --color-gray-800: oklch(0.27 0.0055 286.03);
+  --color-gray-900: oklch(0.21 0.0059 285.89);
+  --color-gray-950: oklch(0.18 0 0);
+
+  --color-red-50: oklch(0.97 0.0129 17.38);
+  --color-red-100: oklch(0.94 0.0309 17.72);
+  --color-red-200: oklch(0.88 0.0593 18.33);
+  --color-red-300: oklch(0.81 0.1035 19.57);
+  --color-red-400: oklch(0.71 0.1661 22.22);
+  --color-red-500: oklch(0.64 0.2078 25.33);
+  --color-red-600: oklch(0.58 0.2152 27.33);
+  --color-red-700: oklch(0.44 0.1629 27.12);
+  --color-red-800: oklch(0.29 0.0947 25.28);
+  --color-red-900: oklch(0.22 0.059 23.41);
+  --color-red-950: oklch(0.17 0.0405 22.19);
+
+  --color-pink-50: oklch(0.97 0.0141 343.2);
+  --color-pink-100: oklch(0.95 0.0276 342.26);
+  --color-pink-200: oklch(0.9 0.0589 343.23);
+  --color-pink-300: oklch(0.82 0.1095 346.02);
+  --color-pink-400: oklch(0.73 0.1752 349.76);
+  --color-pink-500: oklch(0.66 0.2118 354.31);
+  --color-pink-600: oklch(0.59 0.218 0.58);
+  --color-pink-700: oklch(0.47 0.1766 3.02);
+  --color-pink-800: oklch(0.35 0.1294 3.65);
+  --color-pink-900: oklch(0.26 0.0942 3.27);
+  --color-pink-950: oklch(0.2 0.0664 1.15);
+
+  --color-purple-50: oklch(0.98 0.0142 308.3);
+  --color-purple-100: oklch(0.95 0.0327 307.17);
+  --color-purple-200: oklch(0.9 0.0604 306.7);
+  --color-purple-300: oklch(0.83 0.1082 306.38);
+  --color-purple-400: oklch(0.72 0.1767 305.5);
+  --color-purple-500: oklch(0.63 0.2325 303.9);
+  --color-purple-600: oklch(0.56 0.2525 302.32);
+  --color-purple-700: oklch(0.42 0.1974 302.38);
+  --color-purple-800: oklch(0.34 0.1461 305.11);
+  --color-purple-900: oklch(0.25 0.1254 301.71);
+  --color-purple-950: oklch(0.18 0.0828 304.14);
+
+  --color-cyan-50: #ecfeff;
+  --color-cyan-100: #cffafe;
+  --color-cyan-200: #a5f3fc;
+  --color-cyan-300: #67e8f9;
+  --color-cyan-400: #22d3ee;
+  --color-cyan-500: #06b6d4;
+  --color-cyan-600: #0891b2;
+  --color-cyan-700: #0c5c72;
+  --color-cyan-800: #134152;
+  --color-cyan-900: #072a38;
+  --color-cyan-950: #051b24;
+
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #173da6;
+  --color-blue-800: #1a3478;
+  --color-blue-900: #14204a;
+  --color-blue-950: #0c142e;
+
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-200: #99f6e4;
+  --color-teal-300: #5eead4;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0c5d56;
+  --color-teal-800: #114240;
+  --color-teal-900: #032726;
+  --color-teal-950: #021716;
+
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-300: #86efac;
+  --color-green-400: #4ade80;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #116932;
+  --color-green-800: #124a28;
+  --color-green-900: #042713;
+  --color-green-950: #03190c;
+
+  --color-yellow-50: #fefce8;
+  --color-yellow-100: #fef9c3;
+  --color-yellow-200: #fef08a;
+  --color-yellow-300: #fde047;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-yellow-600: #ca8a04;
+  --color-yellow-700: #845209;
+  --color-yellow-800: #713f12;
+  --color-yellow-900: #422006;
+  --color-yellow-950: #281304;
+
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #92310a;
+  --color-orange-800: #6c2710;
+  --color-orange-900: #3b1106;
+  --color-orange-950: #220a04;
+
+  --color-transparent: transparent;
+  --color-white: oklch(1 0 0);
+  --color-black: oklch(0.14 0.0044 285.82);
+
+  /* Spacing */
+  --spacing: 0.25rem;
+
+  /* Breakpoints */
+  --breakpoint-sm: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+
+  /* Font Sizes */
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 0.75rem;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-md: 1rem;
+  --text-md--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.375rem;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.75rem;
+  --text-4xl--letter-spacing: -0.025em;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 3.75rem;
+  --text-5xl--letter-spacing: -0.025em;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 4.5rem;
+  --text-6xl--letter-spacing: -0.025em;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 5.75rem;
+  --text-7xl--letter-spacing: -0.025em;
+
+  /* Sizes */
+  --size-3xs: 14rem;
+  --size-2xs: 16rem;
+  --size-xs: 20rem;
+  --size-sm: 24rem;
+  --size-md: 28rem;
+  --size-lg: 32rem;
+  --size-xl: 36rem;
+  --size-2xl: 42rem;
+  --size-3xl: 48rem;
+  --size-4xl: 56rem;
+  --size-5xl: 64rem;
+  --size-6xl: 72rem;
+  --size-7xl: 80rem;
+  --size-8xl: 90rem;
+
+  /* Font Weights */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* Letter Spacings */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* Line Heights */
+  --leading-shorter: 1.25;
+  --leading-short: 1.375;
+  --leading-normal: 1.5;
+  --leading-tall: 1.625;
+  --leading-taller: 2;
+
+  /* Cursors */
+  --cursor-button: pointer;
+  --cursor-checkbox: default;
+  --cursor-disabled: not-allowed;
+  --cursor-menuitem: default;
+  --cursor-option: default;
+  --cursor-radio: default;
+  --cursor-slider: default;
+  --cursor-switch: pointer;
+
+  /* Border Radius */
+  --radius-2xs: 0.0625rem;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px var(--color-shadow-10), 0 0 1px var(--color-shadow-30);
+  --shadow-sm: 0 2px 4px var(--color-shadow-10), 0 0 1px var(--color-shadow-30);
+  --shadow-sm: 0 2px 4px var(--color-shadow-10), 0 0 1px var(--color-shadow-30);
+  --shadow-md: 0 4px 8px var(--color-shadow-10), 0 0 1px var(--color-shadow-30);
+  --shadow-lg: 0 8px 16px var(--color-shadow-10), 0 0 1px var(--color-shadow-30);
+  --shadow-xl: 0 16px 24px var(--color-shadow-10), 0 0 1px var(--color-shadow-30);
+  --shadow-2xl: 0 24px 40px var(--color-shadow-16), 0 0 1px var(--color-shadow-30);
+  --shadow-inner: inset 0 2px 4px 0 var(--color-shadow-5);
+  --inset-shadow: inset 0 0 0 1px var(--color-shadow-5);
+  --inset-shadow-inner: inset 0 2px 4px 0 var(--color-shadow-5);
+  --drop-shadow-xs: 0 1px 1px rgb(0 0 0 / 0.05);
+  --drop-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.15);
+  --drop-shadow-md: 0 3px 3px rgb(0 0 0 / 0.12);
+  --drop-shadow-lg: 0 4px 4px rgb(0 0 0 / 0.15);
+  --drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
+  --drop-shadow-20xl: 0 25px 25px rgb(0 0 0 / 0.15);
+
+  /* Blurs */
+  --blur-xs: 4px;
+  --blur-sm: 8px;
+  --blur-md: 12px;
+  --blur-lg: 16px;
+  --blur-xl: 24px;
+  --blur-2xl: 40px;
+  --blur-3xl: 64px;
+
+  /* Perspectives */
+  --perspective-dramatic: 100px;
+  --perspective-near: 300px;
+  --perspective-normal: 500px;
+  --perspective-midrange: 800px;
+  --perspective-distant: 1200px;
+
+  /* Aspect Ratio */
+  --aspect-landscape: 4 / 3;
+  --aspect-portrait: 3 / 4;
+  --aspect-wide: 16 / 9;
+  --aspect-ultra-wide: 18 / 5;
+  --aspect-golden: 1.618 / 1;
+
+  /* Transition Timing Functions */
+  --ease-in: cubic-bezier(0.42, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);
+  --ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+  --ease-in-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-sharp: cubic-bezier(0, 0, 0.2, 1);
+  --ease-bounce-out: cubic-bezier(0.9, 2.5, 0.64, 1);
+  --ease-bounce-in: cubic-bezier(0.36, 0, 0.1, -1.5);
+  --ease-bounce-in-out: cubic-bezier(0.29, -2.04, 0.67, 2.64);
+
+  /* Transition Durations */
+  --duration-slowest: 500ms;
+  --duration-slower: 400ms;
+  --duration-slow: 300ms;
+  --duration-moderate: 200ms;
+  --duration-fast: 150ms;
+  --duration-faster: 100ms;
+  --duration-fastest: 50ms;
+
+  /** Animations */
+  /* --animate-spin: spin 1s linear infinite;
+  --animate-ping: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce: bounce 1s infinite;
+  --animate-shine: shine 5s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.3s ease-in forwards;
+  --animate-fade-out: fade-out 0.3s ease-out forwards; */
+
+  /* Keyframes */
+  /* @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes ping {
+    75%,
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  @keyframes pulse {
+    50% {
+      opacity: 0.5;
+    }
+  }
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+  @keyframes shine {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+      display: block;
+    }
+    to {
+      opacity: 0;
+      display: none;
+    }
+  } */
+}

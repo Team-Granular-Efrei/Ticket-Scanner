@@ -1,0 +1,81 @@
+@utility divider-* {
+  --divider-color: --alpha(--value(--color-*, [ *]) / --modifier("0","5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100",number)%);
+}
+
+@utility divider-* {
+  --divider-color: --value(--color-*, [ *]);
+}
+
+@utility divider {
+  @layer components.l1.l2.l3 {
+    @apply flex h-4 flex-row items-center self-stretch whitespace-nowrap;
+    border: none;
+    margin: var(--divider-m, 1rem 0);
+    --divider-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+
+    &:before,
+    &:after {
+      @apply content-[""] h-0.5 w-full grow [background-color:var(--divider-color)];
+    }
+
+    @media print {
+
+      &:before,
+      &:after {
+        border: 0.5px solid;
+      }
+    }
+  }
+}
+
+@utility divider-horizontal {
+  @layer components.l1.l2.l3 {
+    --divider-m: 0 1rem;
+
+    &.divider {
+      @apply h-auto flex-col;
+
+      &:before {
+        @apply h-full w-0.5;
+      }
+
+      &:after {
+        @apply h-full w-0.5;
+      }
+    }
+  }
+}
+
+@utility divider-vertical {
+  @layer components.l1.l2.l3 {
+    --divider-m: 1rem 0;
+
+    &.divider {
+      @apply h-4 flex-row;
+
+      &:before {
+        @apply h-0.5 w-full;
+      }
+
+      &:after {
+        @apply h-0.5 w-full;
+      }
+    }
+  }
+}
+
+@utility divider-start {
+  &:before {
+    @layer components.l1.l2 {
+      @apply hidden;
+    }
+  }
+}
+
+@utility divider-end {
+  &:after {
+    @layer components.l1.l2 {
+      @apply hidden;
+    }
+  }
+}

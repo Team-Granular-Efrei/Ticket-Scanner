@@ -1,0 +1,173 @@
+@utility input-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility input {
+  @apply rounded-md relative inline-flex shrink appearance-none items-center text-start gap-2 px-3 align-middle whitespace-nowrap cursor-text h-(--size) text-sm touch-manipulation;
+  border: var(--border) solid #0000;
+  width: clamp(3rem, 20rem, 100%);
+  border-color: var(--input-color);
+  --size: calc(var(--size-field, 0.25rem) * 10);
+  --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+
+  &:where(input) {
+    @apply inline-flex;
+  }
+
+  :where(input) {
+    @apply inline-flex h-full w-full appearance-none bg-[#0000] [border:#0000];
+
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      @apply outline-hidden;
+    }
+  }
+
+  :where(input[type="url"]),
+  :where(input[type="email"]) {
+    direction: ltr;
+  }
+
+  :where(input[type="date"]) {
+    @apply inline-flex;
+  }
+
+  &:is([data-invalid], [aria-invalid="true"], [data-state="invalid"]),
+  &:has(input:is([data-invalid], [aria-invalid="true"], [data-state="invalid"])) {
+    --input-color: var(--color-error);
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      --input-color: var(--color-error);
+    }
+  }
+
+  &:focus,
+  &:focus-within,
+  &:focus-visible {
+    @apply isolate z-1;
+    outline: 2px solid var(--input-color);
+    outline-offset: 0px;
+  }
+
+  /* increase font size in iOS so the page won't zoom */
+  @media (pointer: coarse) {
+    @supports (-webkit-touch-callout: none) {
+      &:focus,
+      &:focus-within,
+      &:focus-visible {
+        --font-size: 1rem;
+      }
+    }
+  }
+
+  &:has(> input[disabled]),
+  &:is(:disabled, [disabled], [aria-disabled="true"]),
+  fieldset:disabled & {
+    @apply border-base-200 bg-base-200 text-base-content/40 placeholder-base-content/20 cursor-not-allowed [box-shadow:none];
+  }
+
+  &:has(> input[disabled]) > input[disabled] {
+    @apply cursor-not-allowed;
+  }
+
+  &::-webkit-date-and-time-value {
+    text-align: inherit;
+  }
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-3 -me-3;
+    }
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    @apply absolute end-3;
+  }
+
+  &:has(> input[type="date"]) {
+    :where(input[type="date"]) {
+      @apply inline-flex appearance-none;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      @apply absolute end-3 size-[1em] cursor-pointer;
+    }
+  }
+}
+
+@utility input-ghost {
+  @apply bg-[#0000] border-[#0000];
+}
+
+@utility input-soft {
+  background-color: color-mix(in oklab, var(--input-color, var(--color-base-200)) 8%, var(--color-base-100));
+  border-color: color-mix(in oklab, var(--input-color, var(--color-base-200)) 10%, var(--color-base-100));
+}
+
+@utility input-flushed {
+  @apply rounded-none [border:#0000] p-0 bg-[#0000];
+  border-bottom: 1px solid var(--input-color);
+  &:focus,
+  &:focus-within,
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 2px 0 0 var(--input-color);
+  }
+}
+
+@utility input-xs {
+  @apply text-[0.6875rem] leading-3.5;
+  --size: calc(var(--size-field, 0.25rem) * 6);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-1 -me-3;
+    }
+  }
+}
+
+@utility input-sm {
+  @apply text-xs;
+  --size: calc(var(--size-field, 0.25rem) * 8);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-2 -me-3;
+    }
+  }
+}
+
+@utility input-md {
+  @apply text-sm;
+  --size: calc(var(--size-field, 0.25rem) * 10);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-3 -me-3;
+    }
+  }
+}
+
+@utility input-lg {
+  @apply text-lg;
+  --size: calc(var(--size-field, 0.25rem) * 12);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-3 -me-3;
+    }
+  }
+}
+
+@utility input-xl {
+  @apply text-[1.375rem] leading-8.5;
+  --size: calc(var(--size-field, 0.25rem) * 14);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-4 -me-3;
+    }
+  }
+}

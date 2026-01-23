@@ -1,0 +1,17 @@
+@utility link {
+  @apply inline-flex cursor-pointer items-center gap-1.5 decoration-current/20 underline-offset-3 hover:underline;
+}
+
+@utility link-box {
+  @apply relative;
+  .link {
+    @apply relative z-2;
+  }
+}
+
+@utility link-overlay {
+  @apply static hover:no-underline;
+  &::before {
+    @apply absolute inset-0 z-1 content-[""] block cursor-[inherit];
+  }
+}
