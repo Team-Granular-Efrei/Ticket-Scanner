@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState } from "react";
-import { LuAlertCircle, LuCheckCircle, LuInfo, LuX } from "react-icons/lu";
+import { LuCircleAlert, LuCircleCheck, LuInfo, LuX } from "react-icons/lu";
 
 type ToastType = "success" | "error" | "info";
 
@@ -39,7 +39,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     (message: string, type: ToastType = "info") => {
       const id = crypto.randomUUID();
       setToasts((prev) => [...prev, { id, message, type }]);
-      setTimeout(() => removeToast(id), 3000);
+      const durations = {
+        success: 3000,
+        error: 5000,
+        info: 3000,
+      };
+      setTimeout(() => removeToast(id), durations[type]);
     },
     [removeToast],
   );
@@ -52,8 +57,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   };
 
   const icons = {
-    success: <LuCheckCircle className="h-5 w-5" />,
-    error: <LuAlertCircle className="h-5 w-5" />,
+    success: <LuCircleCheck className="h-5 w-5" />,
+    error: <LuCircleAlert className="h-5 w-5" />,
     info: <LuInfo className="h-5 w-5" />,
   };
 

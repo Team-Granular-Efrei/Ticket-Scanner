@@ -33,7 +33,7 @@ export const ReceiptSchema = z.object({
   ),
 
   analysis: z.object({
-    health_score: z.number().min(0).max(100),
+    health_score: z.number().min(0).max(100).default(50),
     financial_advice: z.string().describe("Brief, ruthless budget advice (max 1 sentence)"),
   }),
 });
@@ -56,6 +56,7 @@ export function getSystemPrompt() {
     - Line Items (Name, Price, Qty)
     
     ANALYZE:
+    - Give "health_score": A number from 0-100 rating how healthy the purchase is (100 = very healthy, 0 = unhealthy).
     - Give "financial_advice": A single, punchy sentence.
 
     OUTPUT JSON ONLY matching this structure:
@@ -68,7 +69,7 @@ export function getSystemPrompt() {
         currency: "EUR",
         tax_amount: 0,
         items: [{ name: "string", price: 0, quantity: 1, tags: ["string"] }],
-        analysis: { financial_advice: "string" },
+        analysis: { health_score: 50, financial_advice: "string" },
       },
       null,
       2,

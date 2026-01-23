@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { startTransition, useActionState, useCallback, useEffect, useId, useRef, useState } from "react";
-import { LuCalendar, LuCamera, LuRefreshCw, LuSave, LuStore, LuTag, LuWallet } from "react-icons/lu";
+import { LuCalendar, LuCamera, LuRefreshCw, LuSave, LuStore, LuTag, LuWallet, LuX } from "react-icons/lu";
 import { type AnalysisState, analyzeReceipt } from "@/app/actions/analyze";
 import { BudgetCategory, type ReceiptData } from "@/lib/schema";
 import { useToast } from "@/providers/toast";
@@ -25,6 +25,7 @@ export default function Home() {
 
   const [data, setData] = useState<ReceiptData | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Track if we've already processed the current state
@@ -78,12 +79,32 @@ export default function Home() {
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (file) {
-      info("Analyzing receipt...");
-      const formData = new FormData();
-      formData.append("file", file);
-      startTransition(() => formAction(formData));
+    if (!file) {
+      return;
     }
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      error("Please select an image file");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      return;
+    }
+
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      error("Image too large (max 10MB)");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      return;
+    }
+
+    info("Analyzing receipt...");
+    const formData = new FormData();
+    formData.append("file", file);
+    startTransition(() => formAction(formData));
   }
 
   function updateField(section: keyof ReceiptData, value: unknown) {
@@ -117,7 +138,11 @@ export default function Home() {
             <LuWallet className="h-4 w-4" />
             Wallet
           </Link>
-          {data && <div className="badge badge-primary badge-outline">{data.analysis.health_score}/100</div>}
+          {data && (
+            <div className="tooltip tooltip-left" data-tip="AI-generated health score based on your purchase">
+              <div className="badge badge-primary badge-outline">{data.analysis.health_score}/100</div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -224,10 +249,10 @@ export default function Home() {
                       className="input input-xs input-ghost w-8 bg-base-200 font-bold [&::-webkit-inner-spin-button]:hidden"
                       value={item.quantity}
                       min={1}
-                      max={9}
+                      max={99}
                       onChange={(e) => {
                         const newItems = [...data.items];
-                        newItems[index].quantity = Number(e.target.value);
+                        newItems[index].quantity = Math.max(1, Math.min(99, Number(e.target.value) || 1));
                         updateField("items", newItems);
                       }}
                     />
@@ -269,6 +294,21 @@ export default function Home() {
                         ))}
                       </div>
                     )}
+
+                    {/* Delete Item Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (data.items.length > 1) {
+                          const newItems = data.items.filter((_, i) => i !== index);
+                          updateField("items", newItems);
+                        }
+                      }}
+                      disabled={data.items.length <= 1}
+                      className="btn btn-ghost btn-xs btn-circle text-base-content/40 hover:text-error disabled:opacity-30"
+                    >
+                      <LuX className="h-3 w-3" />
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -284,10 +324,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-3 pt-4">
             <button
               type="button"
-              onClick={() => {
-                info("Receipt discarded");
-                resetScanner();
-              }}
+              onClick={() => setShowDiscardConfirm(true)}
               className="btn btn-outline border-base-300 hover:border-base-400 hover:bg-base-200"
               disabled={isSaving}
             >
@@ -298,6 +335,45 @@ export default function Home() {
               {isSaving ? <span className="loading loading-spinner loading-sm"></span> : <LuSave />}
               {isSaving ? "Saving..." : "Save to Wallet"}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Discard Confirmation Modal */}
+      {showDiscardConfirm && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setShowDiscardConfirm(false)}
+          onKeyDown={(e) => e.key === "Escape" && setShowDiscardConfirm(false)}
+        >
+          <div
+            role="document"
+            className="card w-full max-w-xs bg-base-100 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <div className="card-body items-center text-center">
+              <h3 className="font-bold text-lg">Discard Receipt?</h3>
+              <p className="text-base-content/70">All unsaved changes will be lost.</p>
+              <div className="card-actions mt-4 w-full">
+                <button type="button" onClick={() => setShowDiscardConfirm(false)} className="btn btn-ghost flex-1">
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDiscardConfirm(false);
+                    info("Receipt discarded");
+                    resetScanner();
+                  }}
+                  className="btn btn-error flex-1"
+                >
+                  Discard
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
